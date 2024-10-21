@@ -18,10 +18,17 @@ const instrumentos = [
     'n': 'Guitarra', // NAME
   },
   {
-    't': ['G3', 'C4', 'E4', 'A4', 'G3'], // TUNING
+    't': ['G3', 'C3', 'E4', 'A4', 'G3'], // TUNING
     's': 5, // NUM STRINGS
-    'f': 10, // NUM FRETS
+    'f': 12, // NUM FRETS
     'c': [0,2,3,2,0], // INITIAL CHORD
+    'n': 'Jarana', // NAME
+  },
+  {
+    't': ['A3', 'C#4', 'E4', 'A4', 'A3'], // TUNING
+    's': 5, // NUM STRINGS
+    'f': 12, // NUM FRETS
+    'c': [0,3,2,0,3], // INITIAL CHORD
     'n': 'Jarana', // NAME
   },
 ];
