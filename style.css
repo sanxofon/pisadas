@@ -1,0 +1,156 @@
+:root {
+  --num-strings: 6; /* Número de cuerdas */
+  --num-frets: 13;   /* Número de trastes */
+}
+body, * {
+  font-family: "Roboto", sans-serif;
+  /* font-family: "Agdasima", sans-serif; */
+  background-color: #f6f6f6;
+  color: #000;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+h1 {
+  font-size: 2.5em;
+  font-weight: normal;
+  margin: 0;
+  text-align: center;
+}
+h2 {
+  font-size: 1.2em;
+  text-align: center;
+  background-color: #ddd;
+  margin: 0;
+}
+
+td, input, select, option {
+  background-color: #fff;
+}
+
+b, em {
+  font-size: inherit;
+  font-weight: bold;
+}
+
+.contenedor-general {
+  display: flex;           /* Enables flexbox layout */
+  flex-direction: row;   /* Default: items side-by-side */
+  flex-wrap: wrap;        /* Allows wrapping to next line if needed */
+  gap: 0;             /* Spacing between items */
+}
+
+.chord-info {
+  display: flex;
+  flex-direction: column; /* Vertical layout */
+  gap: 16px;             /* Spacing between items */
+  margin: 0 auto;
+
+  flex: 1 1 300px;   /* Explanation below */
+  padding: 10px;
+  box-sizing: border-box;
+
+  max-height: 90vh;
+  overflow: auto;
+}
+.chord-info div {
+  margin: 0 auto;
+}
+
+.fretboard-container {
+  display: flex; /* To align string list and grid */
+  flex-direction: column; /* Vertical layout */
+  margin: 0 auto;
+
+  flex: 1 1 320px;   /* Explanation below */
+  padding: 10px;
+  box-sizing: border-box;
+  
+  max-height: 90vh;
+  overflow: auto;
+}
+
+@media (max-aspect-ratio: 1/1) { /* If width <= height (portrait-like) */
+  .container {
+    flex-direction: column; /* Switch to column layout */
+  }
+  .chord-info {
+    height: 40vh;
+    overflow: auto;
+  }
+  .fretboard-container {
+    height: 53vh;
+    overflow: auto;
+  }
+}
+
+.fretboard {
+  display: grid;
+  grid-template-columns: repeat(var(--num-strings), 1fr); /* 6 strings as columns */
+  grid-template-rows: repeat(var(--num-frets), 1fr); /* 13 frets as rows + space for string names*/
+  width: 100%; /* Adjust as needed */
+  max-width: calc(45px * var(--num-strings));
+  height: 90vh; /* Adjust as needed */
+  max-height: calc(85px * var(--num-frets));
+  min-height: calc(65px * var(--num-strings));
+  border-left: 2px solid black;  /* Right border for fretboard */
+  border-right: 2px solid black;  /* Right border for fretboard */
+  margin: 0 auto;
+}
+
+.fret {
+  border: 1px solid #bbbbbb;
+  background-color: #ffffff;
+  color: #bbbbbb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.8em;
+}
+
+.open-string {
+  background-color: #dddddd;
+  border-bottom: 2px solid black; /* Visual separation for open strings */
+  color: #999999;
+}
+.fret[data-fret="3"],.fret[data-fret="5"],.fret[data-fret="7"],.fret[data-fret="9"],.fret[data-fret="12"] {
+  background-color: #f6f6f6;
+}
+
+.fret.selected {
+  background-color: #aaccee;
+  color: #000000;
+  font-weight: bold; /* resalta la nota seleccionada */
+}
+
+.fret.muted {
+  background-color:#ccc!important;
+  color:#aaa!important;
+}
+
+.fret.muted.selected { /* override selected style for muted strings */
+  background-color: #ddd; /* Or some other color indicating muted+selected */
+  opacity: 0.5;
+}
+
+/* FUNCIÓN DE TABLA */
+table {
+  border-collapse: collapse;
+  width: auto;
+}
+td {
+  border: 1px solid black;
+  padding: 2px;
+  text-align: center;
+  font-size: 0.9em;
+}
+.clicable {
+  cursor: pointer;
+}
+
+#instrumento {
+  width: 100%;
+}

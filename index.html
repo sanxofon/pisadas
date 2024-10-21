@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="es" xml:lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <!-- Ajustado para mejor escalabilidad -->
+  <!-- Search Engine -->
+  <meta name="description" content="Intérprete de pisadas de Guitarra y otros instrumentos de cuerdas. Muestra el Cifrado Americano de la pisada detectada.">
+  <meta name="image" content="https://sanxofon.github.io/pisadas/share.jpg">
+  <meta name="author" content="Santiago Chávez Novaro">
+  <link rel="manifest" href="https://sanxofon.github.io/pisadas/manifest.webmanifest">
+  <title>Pisadas v1.0</title>
+  <meta name="theme-color" content="#eeeeee" />
+  <!-- Allow web app to be run in full-screen mode. -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Pisadas">
+  <meta name="apple-mobile-web-app-title" content="Pisadas">
+  <meta name="apple-mobile-web-app-status-bar-style" content="white">
+  <link rel="apple-touch-icon" href="https://sanxofon.github.io/pisadas/icon-192.png">
+  <!-- Open Graph general (Facebook, Pinterest & Google+) -->
+  <meta name="og:title" content="Pisadas v1.0">
+  <meta name="og:description" content="Intérprete de pisadas de Guitarra y otros instrumentos de cuerdas. Muestra el Cifrado Americano de la pisada detectada.">
+  <meta name="og:image" content="https://sanxofon.github.io/pisadas/share.jpg">
+  <meta name="og:url" content="https://sanxofon.github.io/pisadas/">
+  <meta name="og:site_name" content="Pisadas">
+  <meta name="og:locale" content="es_MX">
+  <meta name="og:type" content="app">
+  <meta name="website:author" content="Santiago Chávez Novaro">
+  <!-- Schema.org for Google -->
+  <meta itemprop="name" content="Pisadas">
+  <meta itemprop="description" content="Intérprete de pisadas de Guitarra y otros instrumentos de cuerdas. Muestra el Cifrado Americano de la pisada detectada.">
+  <meta itemprop="image" content="https://sanxofon.github.io/pisadas/share.jpg">
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Pisadas">
+  <meta name="twitter:description" content="Intérprete de pisadas de Guitarra y otros instrumentos de cuerdas. Muestra el Cifrado Americano de la pisada detectada.">
+  <meta name="twitter:site" content="@sanxofon">
+  <meta name="twitter:creator" content="@sanxofon">
+  <meta name="twitter:image:src" content="https://sanxofon.github.io/pisadas/share.jpg">
+  <!-- Disable automatic phone number detection. -->
+  <meta name="format-detection" content="telephone=no">
+  <!-- FAVICON -->
+  <link rel="shortcut icon" href="https://sanxofon.github.io/pisadas/icon-192.png" type="image/png">
+  <link rel="icon" href="https://sanxofon.github.io/pisadas/icon-192.png" type="image/png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <select id="instrumento" onchange="setInstrumento(this.value)" title="Selecciona un instrumento">
+    <option value="-1"> - Instrumento - </option>
+    <option value="0">Guitarra</option>
+    <option value="1">Jarana</option>
+  </select>
+  <div class="contenedor-general">
+    <div class="fretboard-container">
+      <div class="fretboard">
+        <!-- Generaremos la grilla con JavaScript -->
+      </div>
+    </div>
+    <div class="chord-info">
+      <div>
+        <h1 id="acorde"></h1>
+        <div id="interpretaciones"></div>
+      </div>
+      <div>
+        <div>La Tónica es <select title="Seleccionar la tónica por..." id="selTonicDef">
+          <option value="0">La nota más grave</option>
+          <option value="1">La nota más común</option>
+          <option value="-1">La cuerda superior</option>
+        </select></div>
+        <div>Tónica: <b id="tonica"></b></div>
+        <div>Bajo: <span id="bajo"></span></div>
+        <div>Notas: <span id="notas"></span></div>
+        <div>Únicas: <span id="unicas"></span></div>
+        <div>Conteo: <span id="conteo"></span></div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
