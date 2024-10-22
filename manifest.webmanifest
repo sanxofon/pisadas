@@ -1,6 +1,6 @@
 {
-  "name": "Intérprete de Pisadas de Guitarra",
-  "short_name": "Pisadas Guitarra",
+  "name": "Intérprete de Pisadas",
+  "short_name": "Pisadas",
   "description": "Intérprete de pisadas de guitarra y otros instrumentos de cuerda.",
   "start_url": "https://sanxofon.github.io/pisadas/",
   "display": "standalone",

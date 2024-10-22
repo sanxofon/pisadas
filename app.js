@@ -4,7 +4,9 @@ let NUM_FRETS = 13;    // Número de trastes
 let TONIC_DEFINED_BY = 0; // + Grave:  0 = La nota más grave, el bajo, es la tónica
                           // xConteo:  1 = La nota que más aparece es la tónica aunque no sea el bajo
                           // Primera: -1 = La primera cuerda (de arriba a abajo!) es la tónica
-let DEFAULT_TUNING; // Guitar standard tuning (INVERSO)
+      
+let DEFAULT_TUNING = ['E2', 'A2', 'D3', 'G3', 'B3', 'E4']; // Inicialización de la afinación por defecto // Guitar standard tuning (INVERSO)
+
 let REVERSA = false; // Para 'horizontal' debe estar TRUE
 
 // Definiciones generales: E2, A2, D3, G3, B3, E4
@@ -14,21 +16,21 @@ const instrumentos = [
     't': ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'], // TUNING
     's': 6, // NUM STRINGS
     'f': 13, // NUM FRETS
-    'c': [3,2,0,0,0,1], // INITIAL CHORD
+    'c': [0,0,0,0,0,0], // INITIAL CHORD
     'n': 'Guitarra', // NAME
   },
   {
     't': ['G3', 'C3', 'E4', 'A4', 'G3'], // TUNING
     's': 5, // NUM STRINGS
     'f': 12, // NUM FRETS
-    'c': [0,2,3,2,0], // INITIAL CHORD
+    'c': [0,0,0,0,0], // INITIAL CHORD
     'n': 'Jarana', // NAME
   },
   {
     't': ['A3', 'C#4', 'E4', 'A4', 'A3'], // TUNING
     's': 5, // NUM STRINGS
     'f': 12, // NUM FRETS
-    'c': [0,3,2,0,3], // INITIAL CHORD
+    'c': [0,0,0,0,0], // INITIAL CHORD
     'n': 'Jarana', // NAME
   },
 ];

@@ -35,19 +35,19 @@ b, em {
 }
 
 .contenedor-general {
-  display: flex;           /* Enables flexbox layout */
-  flex-direction: row;   /* Default: items side-by-side */
-  flex-wrap: wrap;        /* Allows wrapping to next line if needed */
-  gap: 0;             /* Spacing between items */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;     /* Permite wrapping a la siguiente linea si necesita */
+  gap: 0;
 }
 
 .chord-info {
   display: flex;
-  flex-direction: column; /* Vertical layout */
-  gap: 16px;             /* Spacing between items */
+  flex-direction: column;
+  gap: 16px;
   margin: 0 auto;
 
-  flex: 1 1 300px;   /* Explanation below */
+  flex: 1 1 300px;
   padding: 10px;
   box-sizing: border-box;
 
@@ -59,11 +59,11 @@ b, em {
 }
 
 .fretboard-container {
-  display: flex; /* To align string list and grid */
-  flex-direction: column; /* Vertical layout */
+  display: flex;
+  flex-direction: column;
   margin: 0 auto;
 
-  flex: 1 1 320px;   /* Explanation below */
+  flex: 1 1 320px;
   padding: 10px;
   box-sizing: border-box;
   
@@ -71,10 +71,7 @@ b, em {
   overflow: auto;
 }
 
-@media (max-aspect-ratio: 1/1) { /* If width <= height (portrait-like) */
-  .container {
-    flex-direction: column; /* Switch to column layout */
-  }
+@media (max-aspect-ratio: 1/1) { /* Pantalla Vertical */
   .chord-info {
     height: 40vh;
     overflow: auto;
@@ -87,15 +84,15 @@ b, em {
 
 .fretboard {
   display: grid;
-  grid-template-columns: repeat(var(--num-strings), 1fr); /* 6 strings as columns */
-  grid-template-rows: repeat(var(--num-frets), 1fr); /* 13 frets as rows + space for string names*/
-  width: 100%; /* Adjust as needed */
-  max-width: calc(45px * var(--num-strings));
-  height: 90vh; /* Adjust as needed */
-  max-height: calc(85px * var(--num-frets));
-  min-height: calc(65px * var(--num-strings));
-  border-left: 2px solid black;  /* Right border for fretboard */
-  border-right: 2px solid black;  /* Right border for fretboard */
+  grid-template-columns: repeat(var(--num-strings), 1fr); /* num-strings */
+  grid-template-rows: repeat(var(--num-frets), 1fr); /* num-frets */
+  width: 100%;
+  max-width: calc(45px * var(--num-strings)); /* num-strings */
+  height: 90vh;
+  max-height: calc(85px * var(--num-frets)); /* num-frets */
+  min-height: calc(65px * var(--num-strings)); /* num-strings */
+  border-left: 2px solid black;  /* borde izquierdo */
+  border-right: 2px solid black;  /* borde derecho */
   margin: 0 auto;
 }
 
@@ -113,7 +110,7 @@ b, em {
 
 .open-string {
   background-color: #dddddd;
-  border-bottom: 2px solid black; /* Visual separation for open strings */
+  border-bottom: 2px solid black;
   color: #999999;
 }
 .fret[data-fret="3"],.fret[data-fret="5"],.fret[data-fret="7"],.fret[data-fret="9"],.fret[data-fret="12"] {
@@ -131,12 +128,11 @@ b, em {
   color:#aaa!important;
 }
 
-.fret.muted.selected { /* override selected style for muted strings */
-  background-color: #ddd; /* Or some other color indicating muted+selected */
+.fret.muted.selected {
+  background-color: #ddd;
   opacity: 0.5;
 }
 
-/* FUNCIÓN DE TABLA */
 table {
   border-collapse: collapse;
   width: auto;

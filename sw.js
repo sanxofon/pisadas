@@ -1,14 +1,15 @@
-const CACHE_NAME = 'pisadas-guitarra-cache-v1';
+const CACHE_NAME = 'pisadas-guitarra-cache-v1.1';
 const urlsToCache = [
-  '/',
-  'index.html',
-  'style.css',
-  'app.js',
-  'manifest.webmanifest',
-  'icon-48.png',
-  'icon-96.png',
-  'icon-192.png',
-  'icon-512.png' // Asegúrate de incluir todos tus recursos estáticos
+  '/pisadas/',                     // Ruta base de tu proyecto en GitHub Pages
+  '/pisadas/index.html',            // Rutas relativas a la base
+  '/pisadas/style.css',
+  '/pisadas/app.js',
+  '/pisadas/manifest.webmanifest',
+  '/pisadas/icon-48.png',          // Asegúrate de incluir todos tus iconos
+  '/pisadas/icon-96.png',
+  '/pisadas/icon-192.png',
+  '/pisadas/icon-512.png',
+  '/pisadas/share.jpg'             // Otros recursos
 ];
 
 self.addEventListener('install', (event) => {
