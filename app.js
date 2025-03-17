@@ -5,9 +5,12 @@ let TONIC_DEFINED_BY = 0; // + Grave:  0 = La nota más grave, el bajo, es la t�
 // xConteo:  1 = La nota que más aparece es la tónica aunque no sea el bajo
 // Primera: -1 = La primera cuerda (de arriba a abajo!) es la tónica
 
+let SIZE_CHORD_IMAGE = 4; // Tamaño de la imagen del acorde
+
 let DEFAULT_TUNING = ['E2', 'A2', 'D3', 'G3', 'B3', 'E4']; // Inicialización de la afinación por defecto // Guitar standard tuning (INVERSO)
 
 let REVERSA = false; // Para 'horizontal' debe estar TRUE
+let instrumento = 0; // Guitarra por defecto
 
 // Definiciones generales: E2, A2, D3, G3, B3, E4
 if(REVERSA)DEFAULT_TUNING.reverse(); // REVERSA
@@ -76,6 +79,10 @@ function getNoteName(noteIndex, tonic) {
   const tonicIndex = todas_las_notas.indexOf(tonic.replace(/[0-9]/g, ''));
   const relativeIndex = (noteIndex + tonicIndex + NUMBER_OF_NOTES) % NUMBER_OF_NOTES;
   return todas_las_notas[relativeIndex];
+}
+
+function tunningToStr(t) {
+  return t.join('').replaceAll(/[0-9]/g, '');
 }
 
 // Populate the lookup table
@@ -226,13 +233,17 @@ function setChordImage(chordName) {
   console.log('- Chord Name:', chordName);
   console.log('- Tablature String:', tabString);
   
+  console.log(tunningToStr(instrumentos[instrumento]['t']));
+
   // Use createChordFromTablature like in the demo
   try {
     chordGenerator.createChordFromTablature({
       name: chordName,
       tablature: tabString,
       containerId: 'pisadimg',
-      size: 4
+      size: SIZE_CHORD_IMAGE,
+      stringNames: tunningToStr(instrumentos[instrumento]['t']),
+      numStrings: NUM_STRINGS
     });
   } catch (error) {
     console.error('Chord generation error:', error);
@@ -598,6 +609,13 @@ selTonica.addEventListener('change', (event) => {
   updateChordInfo();
 });
 
+function cambiarInstrumento(i) {
+  if (instrumentos[i]['s']!==instrumentos[instrumento]['s']) {
+    localStorage.clear();
+  }
+  window.location.href = '?i=' + i;
+}
+
 function setInstrumento(n) {
   n = parseInt(n);
   if(n<0 || n>=instrumentos.length) return;
@@ -723,7 +741,6 @@ window.addEventListener('click', (event) => {
 });
 window.addEventListener('DOMContentLoaded', (event) => {
   let searchParams = new URLSearchParams(window.location.search);
-  let instrumento = 0;
   if(searchParams.has('i')) {
     instrumento = parseInt(searchParams.get('i'));
   }

@@ -1,7 +1,8 @@
 /**
- * chordGenerator.js
+ * chordGenerator2.js
  * 
  * A helper script to dynamically create chord diagrams using chords.js
+ * Modified to support instruments with different numbers of strings
  */
 
 // Create a namespace for our chord generator
@@ -10,9 +11,10 @@ const chordGenerator = (function() {
         // Set default values for optional parameters
         const defaults = {
             size: 4,
-            containerId: "chord-container",
+            containerId: "pisadimg",
             layout: "1",
-            stringNames: "EADGBe"
+            stringNames: "EADGBE",
+            numStrings: 6 // Default to 6 strings for guitar
         };
         
         // Merge options with defaults
@@ -25,17 +27,17 @@ const chordGenerator = (function() {
         }
         
         // Format positions and fingers to match chords.js requirements
-        // Ensure positions are uppercase and exactly 6 characters
+        // Ensure positions are uppercase and match the number of strings
         const formattedPositions = config.positions.toUpperCase()
             .replace(/[^0-9X-]/g, '-')
-            .padEnd(6, '-')
-            .slice(0, 6);
+            .padEnd(config.numStrings, '-')
+            .slice(0, config.numStrings);
 
-        // Ensure fingers are exactly 6 characters
+        // Ensure fingers match the number of strings
         const formattedFingers = config.fingers
             .replace(/[^0-9-]/g, '-')
-            .padEnd(6, '-')
-            .slice(0, 6);
+            .padEnd(config.numStrings, '-')
+            .slice(0, config.numStrings);
 
         // Generate the chord canvas
         const chordCanvas = chords.generate(
@@ -44,7 +46,8 @@ const chordGenerator = (function() {
             formattedFingers,
             config.size,
             config.layout,
-            config.stringNames
+            config.stringNames,
+            config.numStrings
         );
         
         // Append to container if specified
@@ -64,18 +67,21 @@ const chordGenerator = (function() {
     }
     
     function createChordFromTablature(options) {
+        // Get the number of strings from options or default to 6
+        const numStrings = options.numStrings || 6;
+        
         // Standardize the tablature format
         let tab = options.tablature.replace(/,/g, ' ').trim().split(/\s+/);
         
-        // Convert to positions format (ensure 6 positions)
+        // Convert to positions format (ensure correct number of positions)
         let positions = tab
             .map(fret => fret === 'x' || fret === 'X' ? 'X' : fret)
-            .concat(Array(6).fill('X'))
-            .slice(0, 6)
+            .concat(Array(numStrings).fill('X'))
+            .slice(0, numStrings)
             .join('');
         
-        // Generate default fingers (ensure 6 fingers)
-        let fingers = Array(6).fill('-').join('');
+        // Generate default fingers (ensure correct number of fingers)
+        let fingers = Array(numStrings).fill('-').join('');
         
         // Create the chord with the processed data
         return createChord({
@@ -85,7 +91,8 @@ const chordGenerator = (function() {
             size: options.size || 4,
             containerId: options.containerId,
             layout: options.layout || "1",
-            stringNames: options.stringNames
+            stringNames: options.stringNames,
+            numStrings: numStrings
         });
     }
     

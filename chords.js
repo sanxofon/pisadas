@@ -1,4 +1,4 @@
-﻿/*
+/*
  * chord.js (https://github.com/acspike/ChordJS)
  *
  * Copyright (C) 2012 Aaron Spike [aaron@ekips.org]
@@ -37,7 +37,7 @@ var ChordJS = (function(){
     var FRET_COUNT = 5;
     var FONT_NAME = "Arial";
     
-    var ChordBoxImage = function(name, chord, fingers, size, stringNames) {
+    var ChordBoxImage = function(name, chord, fingers, size, stringNames, numStrings) {
 
         //Fields
         var _ctx;
@@ -104,12 +104,13 @@ var ChordJS = (function(){
             };
         })();
 
+        var _numStrings = numStrings || 6;
+        // var _stringNames = stringNames || 'EADGBe';
+        var _stringNames = stringNames || 'EADGBE';
+        var _fingers = Array(_numStrings).fill(NO_FINGER); //[NO_FINGER, NO_FINGER, NO_FINGER, NO_FINGER, NO_FINGER, NO_FINGER];
+        
         var _size;
         var _chordPositions = [];
-        var _fingers = [NO_FINGER, NO_FINGER, NO_FINGER,
-                                                 NO_FINGER, NO_FINGER, NO_FINGER];
-        
-        var _stringNames = stringNames || 'EADGBe';
         var _chordName;
         var _error;
 
@@ -146,7 +147,8 @@ var ChordJS = (function(){
             _lineWidth = Math.ceil(_size * 0.31);
             _dotWidth = Math.ceil(0.9 * _fretWidth);
             _markerWidth = 0.7 * _fretWidth;
-            _boxWidth = 5 * _fretWidth + 6 * _lineWidth;
+            _boxWidth = (_numStrings - 1) * _fretWidth + (_numStrings) * _lineWidth;
+            // _boxWidth = 5 * _fretWidth + 6 * _lineWidth;
             _boxHeight = FRET_COUNT * (_fretWidth + _lineWidth) + _lineWidth;
 
             //Find out font sizes
@@ -187,24 +189,33 @@ var ChordJS = (function(){
         };
 
         var ParseFingers = function(fingers) {
+            fingers = String(fingers).toUpperCase() + '-'.repeat(_numStrings);  // Modified to use numStrings
+            fingers = fingers.replace(/[^\-T1234]/g,'');
+            _fingers = fingers.substr(0, _numStrings).split('');  // Modified to use numStrings
+        };
+        /* var ParseFingers = function(fingers) {
             fingers = String(fingers).toUpperCase()+'------';
             fingers = fingers.replace(/[^\-T1234]/g,'');
             _fingers = fingers.substr(0,6).split('');
-        };
+        }; */
 
         var ParseChord = function(chord) {
-            if (chord == null || typeof chord == 'undefined' || !chord.match(/[\dxX]{6}|((1|2)?[\dxX]-){5}(1|2)?[\dxX]/)) {
+            // Modify the regex to accept variable length
+            var regexPattern = new RegExp(`[\\dxX]{${_numStrings}}|((1|2)?[\\dxX]-){${_numStrings-1}}(1|2)?[\\dxX]`);
+
+            // if (chord == null || typeof chord == 'undefined' || !chord.match(/[\dxX]{6}|((1|2)?[\dxX]-){5}(1|2)?[\dxX]/)) {
+            if (chord == null || typeof chord == 'undefined' || !chord.match(regexPattern)) {
                 _error = true;
             } else {
                 var parts;
-                if (chord.length > 6) {
+                if (chord.length > _numStrings) {
                     parts = chord.split('-');
                 } else {
                     parts = chord.split('');
                 }
                 var maxFret = 0;
                 var minFret = Number.MAX_VALUE;
-                for (var i = 0; i < 6; i++) {
+                for (var i = 0; i < _numStrings; i++) {
                     if (parts[i].toUpperCase() == "X") {
                         _chordPositions[i] = MUTED;
                     } else {
@@ -258,7 +269,7 @@ var ChordJS = (function(){
                 _graphics.DrawLine(pen, _xstart, y, _xstart + _boxWidth - _lineWidth, y);
             }
 
-            for (i = 0; i < 6; i++) {
+            for (i = 0; i < _numStrings; i++) {
                 var x = _xstart + (i * totalFretWidth);
                 _graphics.DrawLine(pen, x, _ystart, x, _ystart + _boxHeight - _lineWidth);
             }
@@ -273,10 +284,10 @@ var ChordJS = (function(){
         var DrawBars = function() {
             var bars = {};
             var bar;
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < (_numStrings-1); i++) { // TEST
                 if (_chordPositions[i] != MUTED && _chordPositions[i] != OPEN && _fingers[i] != NO_FINGER && !bars.hasOwnProperty(_fingers[i])) {
                     bar = { 'Str':i, 'Pos':_chordPositions[i], 'Length':0, 'Finger':_fingers[i] };
-                    for (var j = i + 1; j < 6; j++) {
+                    for (var j = i + 1; j < _numStrings; j++) { // TEST
                         if (_fingers[j] == bar['Finger'] && _chordPositions[j] == _chordPositions[i]) {
                             bar['Length'] = j - i;
                         }
@@ -408,7 +419,7 @@ var ChordJS = (function(){
             var xpos = _xstart + (0.5 * _lineWidth);
             var ypos = _ystart + _boxHeight;
             var font = Font(FONT_NAME, _guitarStringFontSize);
-            for (var s=0; s<6; s++) {
+            for (var s=0; s<_numStrings; s++) {
                 var guitarString = _stringNames[s];
                 var charSize = _graphics.MeasureString(guitarString, font);
                 _graphics.DrawString(guitarString, font, _foregroundBrush, xpos - (0.5 * charSize.Width), ypos);
@@ -468,14 +479,15 @@ var ChordJS = (function(){
 
     };  
     
-    function GenerateChordHtml(name, positions, fingering, size, layout, stringNames) {
-        if (positions.length != 6 || fingering.length != 6) {
+    function GenerateChordHtml(name, positions, fingering, size, layout, stringNames, numStrings) {
+        const _numStrings = numStrings || 6;
+        if (positions.length != _numStrings || fingering.length != _numStrings) {
             console.error('ChordJS cannot generate a chord diagram from invalid chord input! (Too many positions or fingers.');
             console.log('ChordJS will render an empty chord instead!');
-            positions = 'xxxxxx';
-            fingering = '------';
+            positions = 'x'.repeat(_numStrings);
+            fingering = '-'.repeat(_numStrings);
         }
-        var chordObj = ChordBoxImage(name, positions, fingering, size, stringNames);
+        var chordObj = ChordBoxImage(name, positions, fingering, size, stringNames, _numStrings);
         var canvas = document.createElement('canvas');
         canvas.setAttribute('class', 'rendered-chord');
         canvas.setAttribute('width', chordObj.getWidth());
