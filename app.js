@@ -12,6 +12,8 @@ let DEFAULT_TUNING = ['E2', 'A2', 'D3', 'G3', 'B3', 'E4']; // Inicialización de
 let REVERSA = false; // Para 'horizontal' debe estar TRUE
 let instrumento = 0; // Guitarra por defecto
 
+let verbose = false; 
+
 // Definiciones generales: E2, A2, D3, G3, B3, E4
 if(REVERSA)DEFAULT_TUNING.reverse(); // REVERSA
 const instrumentos = [
@@ -113,14 +115,14 @@ function loadScript(url, callback) {
     script.src = url;
     script.type = 'text/javascript';
     script.onload = () => {
-      console.log(`Script loaded successfully: ${url}`);
+      if (verbose) console.log(`Script loaded successfully: ${url}`);
       if (callback) {
         callback(); // Execute the callback if provided
       }
       resolve(); // Resolve the promise after the callback
     };
     script.onerror = (error) => {
-      console.error(`Error loading script: ${url}`, error);
+      if (verbose) console.error(`Error loading script: ${url}`, error);
       reject(error);
     };
     document.head.appendChild(script);
@@ -192,14 +194,16 @@ function saveFretPositions() {
 // NEW FUNCTION (before setTablature())
 function loadFretPositions() {
   const savedPositions = localStorage.getItem(STORAGE_KEY);
-  if (NUM_STRINGS!==savedPositions.length) { // Fret positions cleared from localStorage due to NUM_STRINGS change
-    localStorage.removeItem(STORAGE_KEY);
-    selectedFrets = Array(NUM_STRINGS).fill(-1);
-  }
   if (savedPositions) {
-    selectedFrets = JSON.parse(savedPositions);
-    setAcorde(selectedFrets);
-    console.log('Fret positions loaded from localStorage:', selectedFrets);
+    if (NUM_STRINGS!==savedPositions.length) { // Fret positions cleared from localStorage due to NUM_STRINGS change
+      localStorage.removeItem(STORAGE_KEY);
+      selectedFrets = Array(NUM_STRINGS).fill(-1);
+      if (verbose) console.log('Fret positions deleted from localStorage for a change in NUM_STRINGS');
+    } else {
+      selectedFrets = JSON.parse(savedPositions);
+      setAcorde(selectedFrets);
+      if (verbose) console.log('Fret positions loaded from localStorage:', selectedFrets);
+    }
   }
 }
 
@@ -234,11 +238,11 @@ function setChordImage(chordName) {
     .map(fret => fret === -1 ? 'X' : fret)
     .join(' ');
   
-  /* console.log('Chord Generation Debug:');
-  console.log('- Chord Name:', chordName);
-  console.log('- Tablature String:', tabString);
-  
-  console.log(tunningToStr(instrumentos[instrumento]['t'])); */
+  if (verbose) {
+    console.log('Chord Generation Debug:');
+    console.log('- Chord Name:', chordName);
+    console.log('- Tablature String:', tabString);
+  }
 
   // Use createChordFromTablature like in the demo
   try {
@@ -349,7 +353,7 @@ function updateChordInfo(setonica='') {
   
   // Si está definida y existe en el acorde se forza la tónica a la definida
   if (setonica!='' && notasUnicasConteo[0].indexOf(setonica) !== -1) {
-    // console.log("Forzar tónica:", setonica);
+    if (verbose) console.log("Forzar tónica:", setonica);
     tonica = setonica;
   } else if (TONIC_DEFINED_BY==3) { // La cuerda superior
     tonica = acordeNotas[0];
@@ -589,13 +593,11 @@ function calcularAcordeMasSimple(interpretaciones,lowestNote,masComun) {
       mejorAcorde = i;
     }
   }
-  console.log('tonica:',interpretaciones[mejorAcorde][0][0]);
   return interpretaciones[mejorAcorde][0][0];
 }
 
 // Interpreta los intervalos
 function intepretarIntervalo(intervals) {
-  // console.log("Versión:", acordesConocidosVersion);
   const il = intervals.length;
   if (il < 2) return ""; 
   if (il < 3) return acordesConocidos[intervals.join(' ')] || "?";
@@ -620,7 +622,7 @@ function intepretarIntervalo(intervals) {
       return acordesConocidos[chordKey] + suffix + (il!=i ? '?':'');
     } else {
       // No se encontró la definición
-      // console.log(chordKey,acordesConocidos[chordKey]);
+      if (verbose) console.log("No se encontró la definición", chordKey, acordesConocidos[chordKey]);
     }
   }
   
@@ -726,7 +728,7 @@ function createPiano() {
 function selectPianoKey(event) {
   const key = event.target;
   const note = key.dataset.note;
-  console.log(`Piano key ${note} was clicked`);
+  if (verbose) console.log(`Nota del piano tocada: ${note}`);
   // Here you would add the logic to select a key
 }
 // FULL MODIFIED FUNCTION
@@ -756,10 +758,10 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
     .then((registration) => {
-      console.log('Service Worker registered: ', registration);
+      if (verbose) console.log('Service Worker registered: ', registration);
     })
     .catch((error) => {
-      console.log('Service Worker registration failed: ', error);
+      if (verbose) console.log('Service Worker registration failed: ', error);
     });
   });
 }
@@ -788,10 +790,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
   // loadScript -> acordesConocidos
   loadScript('acordesConocidos.js', loadFretPositions)
     .then(() => {
-      console.log("External script executed");
+      if (verbose) console.log("External script executed");
       // You can now use functions or variables from external-script.js here
     })
     .catch(error => {
-      console.error("There was an error:", error);
+      if (verbose) console.error("There was an error:", error);
     });
 });
