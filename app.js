@@ -229,11 +229,11 @@ function setChordImage(chordName) {
     .map(fret => fret === -1 ? 'X' : fret)
     .join(' ');
   
-  console.log('Chord Generation Debug:');
+  /* console.log('Chord Generation Debug:');
   console.log('- Chord Name:', chordName);
   console.log('- Tablature String:', tabString);
   
-  console.log(tunningToStr(instrumentos[instrumento]['t']));
+  console.log(tunningToStr(instrumentos[instrumento]['t'])); */
 
   // Use createChordFromTablature like in the demo
   try {
@@ -255,16 +255,23 @@ function openModal() {
   document.getElementById('notation-modal').style.display = 'grid';
 }
 
+function openModalConfig() {
+  document.getElementById('config-modal').style.display = 'grid';
+}
+
 // Function to close the modal
 function closeModal() {
   document.getElementById('notation-modal').style.display = 'none';
+  document.getElementById('config-modal').style.display = 'none';
 }
 
 // Close the modal when the user clicks anywhere outside of the modal
 window.onclick = function(event) {
   const modal = document.getElementById('notation-modal');
-  if (event.target == modal) {
+  const modalConfig = document.getElementById('config-modal');
+  if (event.target == modal || event.target == modalConfig) {
     modal.style.display = 'none';
+    modalConfig.style.display = 'none';
   }
 }
 
@@ -295,6 +302,21 @@ function codificarNameImg(str) {
   }
 }
 
+function laMasComun(acordeNotas,nuc) {
+  nuc = getNotesSortedByCount(nuc);
+  let conOctava = [];
+  for (const n of nuc[0]) {
+    for (const no of acordeNotas) {
+      const x = no.replace(/[0-9]/g, '');
+      if (x==n) {
+        conOctava.push(no);
+        break;
+      }
+    }
+  }
+  return conOctava[0];
+}
+
 function updateChordInfo(setonica='') {
   const acordeNotas = [];
   for (let i = 0; i < NUM_STRINGS; i++) {
@@ -312,33 +334,28 @@ function updateChordInfo(setonica='') {
   let notasUnicasConteo = contarNotas(acordeNotas);
   const lowestNote = getLowestNote(acordeNotas);
   
-  // Buscamos la tónica más adecuada
-  let tonica;
-  if (TONIC_DEFINED_BY<0) { // Primera cuerda
-    tonica = acordeNotas[0]; // Para la primera cuerda
-  } else if (TONIC_DEFINED_BY>0) { // El que aparece más
-    notasUnicasConteo = getNotesSortedByCount(notasUnicasConteo);
-    let conOctava = [];
-    for (const n of notasUnicasConteo[0]) {
-      for (const no of acordeNotas) {
-        const x = no.replace(/[0-9]/g, '');
-        if (x==n) {
-          conOctava.push(no);
-          break;
-        }
-      }
-    }
-    tonica = conOctava[0]; // Para la primera cuerda
-  } else { // La más grave
-    tonica = lowestNote;
-  }
-  // Si está definida y existe en el acorde se forza la tónica a la definida
-  if (setonica!='' && notasUnicasConteo[0].indexOf(setonica) !== -1) {
-    console.log("Forzar tónica:", setonica);
-    tonica = setonica;
-  }
   // calculamos las posibles interpretaciones
   const interpretaciones = getChordInterpretations(acordeNotas);
+
+  // Buscamos la tónica más adecuada
+  let tonica;
+  
+  const masComun = laMasComun(acordeNotas,notasUnicasConteo);
+  
+  // Si está definida y existe en el acorde se forza la tónica a la definida
+  if (setonica!='' && notasUnicasConteo[0].indexOf(setonica) !== -1) {
+    // console.log("Forzar tónica:", setonica);
+    tonica = setonica;
+  } else if (TONIC_DEFINED_BY==3) { // La cuerda superior
+    tonica = acordeNotas[0];
+  } else if (TONIC_DEFINED_BY==2) { // La nota más común
+    tonica = masComun;
+  } else if (TONIC_DEFINED_BY==1) { // La nota más grave
+    tonica = lowestNote;
+  } else { // El acorde más simple
+    tonica = calcularAcordeMasSimple(interpretaciones,lowestNote,masComun);
+  }
+
   
   // Actualizar salida UI para usuario
   tonicaInput.textContent = tonica;
@@ -552,9 +569,28 @@ function getChordInterpretations(acordeNotas) {
   return lista;
 }
 
+function calcularAcordeMasSimple(interpretaciones,lowestNote,masComun) {
+  lowestNote = lowestNote.replace(/[0-9]/g, '');
+  masComun = masComun.replace(/[0-9]/g, '');
+  let mejorAcorde = 0;
+  let largo = 100;
+  for (let i = 0; i < interpretaciones.length; i++) {
+    let que = interpretaciones[i][3].replaceAll('sus','').replaceAll(/\([^)]+\)/g, '').replaceAll(/[mM#b+\-]+/g, '');
+    let quelen = que.length;
+    if (interpretaciones[i][0][0]==lowestNote) quelen -= 0.1
+    if (interpretaciones[i][0][0]==masComun) quelen -= 0.1
+    if (!que.includes('?') && quelen < largo) {
+      largo = que.length;
+      mejorAcorde = i;
+    }
+  }
+  console.log('tonica:',interpretaciones[mejorAcorde][0][0]);
+  return interpretaciones[mejorAcorde][0][0];
+}
+
 // Interpreta los intervalos
 function intepretarIntervalo(intervals) {
-  console.log("Versión:", acordesConocidosVersion);
+  // console.log("Versión:", acordesConocidosVersion);
   const il = intervals.length;
   if (il < 2) return ""; 
   if (il < 3) return acordesConocidos[intervals.join(' ')] || "?";
@@ -603,8 +639,7 @@ return todas_las_notas[newNoteIndex] + newOctave;
 const selTonica = document.getElementById('selTonicDef');
 selTonica.addEventListener('change', (event) => {
   let v = parseInt(event.target.value);
-  if(v<-1)v=-1;
-  else if(v>1)v=1;
+  if(v<0 || v>3)v=0;
   TONIC_DEFINED_BY = v;
   updateChordInfo();
 });

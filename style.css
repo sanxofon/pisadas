@@ -168,6 +168,24 @@ td {
   text-align: center;
 }
 
+/* Config Icon */
+.modal-config-icon {
+  position: fixed;
+  height: 20pt;
+  width: 20pt;
+  line-height: 100%;
+  top: 26px;
+  right: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1000;
+  font-size: 20pt;
+  display: grid;
+  text-align: center;
+}
+.modal-config-icon:hover {
+  font-weight: bold;
+}
 
 /* Info Icon */
 .modal-info-icon {
@@ -176,7 +194,7 @@ td {
   width: 12pt;
   line-height: 100%;
   top: 30px;
-  right: 24px;
+  right: 52px;
   background-color: aquamarine;
   border: 1px solid #444;
   border-radius: 50%;
@@ -238,15 +256,37 @@ td {
   padding: 10px;
   text-align: center;
   font-size: 1.2em;
+  position: relative;
+}
+.modal-table {
+  margin: auto;
+  min-width: 320px;
+  height: 70vh;
+  width: 100%;
+  max-width: 480px;
+  background-color: #fff;
+}
+
+.blanco {
+  background-color: #fff;
+}
+
+.padding-20 {
+  padding: 20px;
 }
 
 /* Close Button */
 .close {
   color: #aaa;
-  float: right;
+  /* float: right; */
   font-size: 28px;
   font-weight: bold;
+  position: absolute;
+  top: 0;
+  right: 10px;
 }
+
+
 
 .close:hover,
 .close:focus {

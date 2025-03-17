@@ -53,6 +53,8 @@ Esto te permitirá iniciar la aplicación desde su propio ícono, usar la pantal
 * **`index.html`:** Contiene la estructura HTML de la aplicación, incluyendo el diapasón, la información del acorde y los controles.
 * **`style.css`:**  Define los estilos visuales de la aplicación.
 * **`app.js`:** Contiene la lógica principal de la aplicación, incluyendo la creación del diapasón, la detección de acordes y la actualización de la información.
+* **`chords.js`:**  Versión modificada de [ChordJS](https://github.com/acspike/ChordJS).
+* **`chordGenerator.js`:**  Helper para simplificar el uso de [ChordJS](https://github.com/acspike/ChordJS).
 * **`sw.js`:**  El service worker para la funcionalidad offline.
 * **`manifest.webmanifest`:**  El manifiesto de la aplicación web.
 

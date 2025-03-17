@@ -8,7 +8,7 @@
   <meta name="image" content="https://sanxofon.github.io/pisadas/share.jpg">
   <meta name="author" content="Santiago Chávez Novaro">
   <link rel="manifest" href="https://sanxofon.github.io/pisadas/manifest.webmanifest">
-  <title>Pisadas v1.2</title>
+  <title>Pisadas v1.3</title>
   <meta name="theme-color" content="#eeeeee" />
   <!-- Allow web app to be run in full-screen mode. -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -70,11 +70,12 @@
       <div class="centrar">
         La Tónica es 
         <select title="Seleccionar la tónica por..." id="selTonicDef">
-          <option value="0">La nota más grave</option>
-          <option value="1">La nota más común</option>
-          <option value="-1">La cuerda superior</option>
+          <option value="0">El acorde más probable</option>
+          <option value="1">La nota más grave</option>
+          <option value="2">La nota más común</option>
+          <option value="3">La cuerda superior</option>
         </select>
-        <div class="extradata-icon" onclick="toggleExtraData()">&#9881;</div>
+        <div class="extradata-icon" onclick="toggleExtraData()">&#128161;</div>
       </div>
       <div class="centrar hidden" id="extradata">
         <div>Tónica: <b id="tonica"></b></div>
@@ -103,7 +104,18 @@
   </div>
   <!-- Info Icon -->
   <div class="modal-info-icon" onclick="openModal()">i</div>
+  <div class="modal-config-icon" onclick="openModalConfig()">&#9881;</div>
   
+  <!-- Modal-config -->
+  <div id="config-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-title">Configuración <span class="close" onclick="closeModal()">×</span></div>
+      <hr>
+      <div class="modal-table">
+        <div class="padding-20 blanco">[Configuraciones...]</div>
+      </div>
+    </div>
+  </div>
   <!-- Modal -->
   <div id="notation-modal" class="modal">
     <div class="modal-content">
