@@ -186,11 +186,16 @@ function getTablature() {
 // NEW FUNCTION (before getTablature())
 function saveFretPositions() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedFrets));
+  
 }
 
 // NEW FUNCTION (before setTablature())
 function loadFretPositions() {
   const savedPositions = localStorage.getItem(STORAGE_KEY);
+  if (NUM_STRINGS!==savedPositions.length) { // Fret positions cleared from localStorage due to NUM_STRINGS change
+    localStorage.removeItem(STORAGE_KEY);
+    selectedFrets = Array(NUM_STRINGS).fill(-1);
+  }
   if (savedPositions) {
     selectedFrets = JSON.parse(savedPositions);
     setAcorde(selectedFrets);
@@ -645,9 +650,6 @@ selTonica.addEventListener('change', (event) => {
 });
 
 function cambiarInstrumento(i) {
-  if (instrumentos[i]['s']!==instrumentos[instrumento]['s']) {
-    localStorage.clear();
-  }
   window.location.href = '?i=' + i;
 }
 
