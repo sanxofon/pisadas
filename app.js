@@ -2,9 +2,9 @@
 let NUM_STRINGS = 6;  // Número de cuerdas
 let NUM_FRETS = 13;    // Número de trastes
 let TONIC_DEFINED_BY = 0; // + Grave:  0 = La nota más grave, el bajo, es la tónica
-                          // xConteo:  1 = La nota que más aparece es la tónica aunque no sea el bajo
-                          // Primera: -1 = La primera cuerda (de arriba a abajo!) es la tónica
-      
+// xConteo:  1 = La nota que más aparece es la tónica aunque no sea el bajo
+// Primera: -1 = La primera cuerda (de arriba a abajo!) es la tónica
+
 let DEFAULT_TUNING = ['E2', 'A2', 'D3', 'G3', 'B3', 'E4']; // Inicialización de la afinación por defecto // Guitar standard tuning (INVERSO)
 
 let REVERSA = false; // Para 'horizontal' debe estar TRUE
@@ -16,21 +16,21 @@ const instrumentos = [
     't': ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'], // TUNING
     's': 6, // NUM STRINGS
     'f': 13, // NUM FRETS
-    'c': [0,0,0,0,0,0], // INITIAL CHORD
+    'c': [-1,-1,-1,-1,-1,-1], // INITIAL CHORD
     'n': 'Guitarra', // NAME
   },
   {
     't': ['G3', 'C3', 'E4', 'A4', 'G3'], // TUNING
     's': 5, // NUM STRINGS
     'f': 12, // NUM FRETS
-    'c': [0,0,0,0,0], // INITIAL CHORD
+    'c': [-1,-1,-1,-1,-1], // INITIAL CHORD
     'n': 'Jarana', // NAME
   },
   {
     't': ['A3', 'C#4', 'E4', 'A4', 'A3'], // TUNING
     's': 5, // NUM STRINGS
     'f': 12, // NUM FRETS
-    'c': [0,0,0,0,0], // INITIAL CHORD
+    'c': [-1,-1,-1,-1,-1], // INITIAL CHORD
     'n': 'Jarana', // NAME
   },
 ];
@@ -38,59 +38,8 @@ const instrumentos = [
 // COSTANTES GLOBALES
 const NUMBER_OF_NOTES = 12;
 const MIN_NOTES_FOR_CHORD = 2;
-// ACORDES CONOCIDOS
-const acordesConocidos = {
-  '0-7': '5',               // Quinta justa
-  '0-2-5': 'sus24(s5)',     // suspendida de 2a y 4a (sin 5a)
-    '0-2-5-9': 'sus469(s5)',// suspendida de 4a con 6a y 9a mayor (sin 5a)
-  '0-2-6': 'sus25-',        // sus25b // Suspendida de 2a con 5a disminuida
-    '0-2-6-9': 'sus25-6',   // sus25b6 // Suspendida de 2a con 5a disminuida y 6a
-  '0-2-7': 'sus2',          // Suspendida de 2a
-    '0-2-6-7': 'sus211+',   // Suspendida de 2a con 11a aumentada
-      '0-2-6-7-9': 'sus2611+', // Suspendida de 2a con 6a y 11a aumentada
-    '0-2-5-7': '49',        // 24 // 4a y 9a ó 2a y 4a 
-      '0-2-5-7-11': '47M9', // 247M // 4a y 9a ó 2a y 4a con 7a mayor
-  '0-3-5': 'm4(s5)',        // Menor con 4a (sin 5a)
-    '0-3-5-8': 'm45+',      // Menor con 4a con 5a aumentada
-      '0-1-3-5-8': 'm45+9m',// Menor con 4a con 5a aumentada y 9a menor
-      '0-2-3-5-8': 'm45+9', // Menor con 4a con 5a aumentada y 9a menor
-    '0-3-5-9': 'm46(s5)',   // Menor con 4a con 6a (sin 5a)
-      '0-3-5-9-10': 'm467(s5)',// Menor con 4a con 5a y 7a menor (sin 5a)
-  '0-3-6': '-(dim)',        // dim // Disminuida -> Menor con 5a disminuida
-  '0-3-7': 'm',             // Menor
-    '0-3-7-9': 'm6',        // Menor con 6a
-    '0-3-7-10': 'm7',       // Menor con 7a menor
-    '0-3-7-11': 'm7M',      // Menor con 7a mayor
-    '0-1-3-7': 'm9m',       // Menor con 9a menor
-    '0-2-3-7': 'm9',        // Menor con 9a mayor 
-  '0-3-8': 'm5+',           // Menor con 5a aumentada
-    '0-3-6-8': 'm5-6m',     // Menor con 5a disminuida y 6a menor
-      '0-1-3-6-8': 'm5-6m', // Menor con 5a disminuida, 6a menor y 9a menor
-  '0-3-9': 'm6(s5)',        // Menor con 6a (sin 5a)
-  '0-3-10': 'm7(s5)',       // Menor con 7a menor (sin 5a)
-  '0-3-11': 'm7M(s5)',      // Menor con 7a mayor (sin 5a)
-  '0-4-5': '4(s5)',         // Mayor con 4a (sin 5a)
-    '0-4-5-7': '4',         // Mayor con 4a
-      '0-4-5-7-9': '46',    // Mayor con 4a y 6a
-      '0-4-5-7-10': '47',   // Mayor con 4a y 7a menor
-      '0-4-5-7-11': '47M',  // Mayor con 4a y 7a mayor
-  '0-4-7': '(maj)',         // Mayor
-    '0-4-7-9': '6',         // Mayor con 6a
-    '0-4-7-10': '7',        // Mayor con 7a menor
-    '0-4-7-11': '7M',       // Mayor con 7a mayor
-      '0-2-4-7-11': '7M9',  // Mayor con 7a mayor y 9a mayor
-    '0-1-4-7': '9m',        // Mayor con 9a menor
-    '0-2-4-7': '9',         // Mayor con 9a mayor 
-  '0-4-8': '+(aug)',        // aug // Aumentada -> Mayor con 5a aumentada
-  '0-4-9': '6(s5)',         // Mayor con 6a (sin 5a)
-  '0-4-10': '7(s5)',        // Mayor con 7a menor (sin 5a)
-  '0-4-11': '7M(s5)',       // Mayor con 7a mayor (sin 5a)
-  '0-5-7': 'sus4',          // Suspendida de 4a
-    '0-5-7-9': 'sus46',     // Suspendida de 4a con 6a
-  '0-5-8': 'sus45+',        // Suspendida de 4a con 5a aumentada
-    '0-1-5-8': 'sus45+9m',  // Suspendida de 4a con 5 aumentada y 9a menor
-  '0-5-9': '46(s5)',        // 4a y 6a (sin 5a)
-};
+
+const pisadimgDiv = document.getElementById('pisadimg');
 
 const fretboard = document.querySelector('.fretboard');
 const notasInput = document.querySelector('#notas');
@@ -99,17 +48,35 @@ const conteoInput = document.querySelector('#conteo');
 const tonicaInput = document.querySelector('#tonica');
 const bajoInput = document.querySelector('#bajo');
 const acordeInput = document.querySelector('#acorde');
+const acordeReduxInput = document.querySelector('#acorderedux');
 const interpretaInput = document.querySelector('#interpretaciones');
 
 // Las cuerdas empiezan muteadas
 let selectedFrets = Array(NUM_STRINGS).fill(-1);
 let mutedStrings = Array(NUM_STRINGS).fill(true);  // All strings muted initially
 let fretboardCells = []; //Array of fretboard cells
+const STORAGE_KEY = 'lastFretPositions'; // memoria último acorde
 
 const todas_las_notas = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
+// Global de acordes conocidos
+let acordesConocidos = {};
+let acordesConocidosVersion = 0;
+
 // Pre-calculated lookup table of notes for each string and fret
 let getNota = [];
+
+// Piano related
+const pianoContainer = document.querySelector('.piano');
+const pianoKeys = [];
+const pianoNotes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C"];
+const pianoNotesIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+// NEW FUNCTION (before createGetNota())
+function getNoteName(noteIndex, tonic) {
+  const tonicIndex = todas_las_notas.indexOf(tonic.replace(/[0-9]/g, ''));
+  const relativeIndex = (noteIndex + tonicIndex + NUMBER_OF_NOTES) % NUMBER_OF_NOTES;
+  return todas_las_notas[relativeIndex];
+}
 
 // Populate the lookup table
 function createGetNota() {
@@ -131,6 +98,26 @@ function createGetNota() {
       getNota[string][fret] = note + currentOctave;
     }
   }
+}
+
+function loadScript(url, callback) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = url;
+    script.type = 'text/javascript';
+    script.onload = () => {
+      console.log(`Script loaded successfully: ${url}`);
+      if (callback) {
+        callback(); // Execute the callback if provided
+      }
+      resolve(); // Resolve the promise after the callback
+    };
+    script.onerror = (error) => {
+      console.error(`Error loading script: ${url}`, error);
+      reject(error);
+    };
+    document.head.appendChild(script);
+  });
 }
 
 function createFretboard() {
@@ -161,18 +148,113 @@ function selectFret(event) {
   const fretIndex = parseInt(cell.dataset.fret);
   let cellIndex = fretIndex * NUM_STRINGS + stringIndex;
   if (cell.classList.contains('selected')) {
-      cell.classList.remove('selected');
-      selectedFrets[stringIndex] = -1;
+    cell.classList.remove('selected');
+    selectedFrets[stringIndex] = -1;
   } else {
-      const previouslySelectedFret = selectedFrets[stringIndex];
-      if (previouslySelectedFret !== -1) {
-          let prevCellIndex = previouslySelectedFret * NUM_STRINGS + stringIndex;
-          fretboardCells[prevCellIndex].classList.remove('selected');
-      }
-      selectedFrets[stringIndex] = fretIndex;
-      cell.classList.add('selected');
+    const previouslySelectedFret = selectedFrets[stringIndex];
+    if (previouslySelectedFret !== -1) {
+      let prevCellIndex = previouslySelectedFret * NUM_STRINGS + stringIndex;
+      fretboardCells[prevCellIndex].classList.remove('selected');
+    }
+    selectedFrets[stringIndex] = fretIndex;
+    cell.classList.add('selected');
   }
   updateChordInfo();
+  saveFretPositions(); // Memoria, guardar a LocalStorage
+}
+
+function getTablature() {
+  let tablature = [];
+  for (let stringIndex = 0; stringIndex < NUM_STRINGS; stringIndex++) {
+    let fret = selectedFrets[stringIndex];
+    if (fret === -1) {
+      tablature.push('x'); // 'x' indicates that the string is not played
+    } else {
+      tablature.push(fret);
+    }
+  }
+  return tablature;
+}
+
+// NEW FUNCTION (before getTablature())
+function saveFretPositions() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedFrets));
+}
+
+// NEW FUNCTION (before setTablature())
+function loadFretPositions() {
+  const savedPositions = localStorage.getItem(STORAGE_KEY);
+  if (savedPositions) {
+    selectedFrets = JSON.parse(savedPositions);
+    setAcorde(selectedFrets);
+    console.log('Fret positions loaded from localStorage:', selectedFrets);
+  }
+}
+
+// Function to interpret the tablature input
+function setTablature() {
+  document.getElementById('tablature-input').value = document.getElementById('tablature-input').value.replaceAll(',', ' '); // Remove spaces
+  const tablatureInput = document.getElementById('tablature-input').value.split(' ');
+  tablature = tablatureInput.map(fret => fret.trim() === 'x' ? -1 : parseInt(fret.trim())); // Convert 'x' to -1
+  setAcorde([-1,-1,-1,-1,-1,-1]); // Clear the fretboard
+  setAcorde(tablature);
+}
+
+function setChordImage(chordName) {
+  if (chordName.includes('?')) {
+    const containerDiv = document.createElement('div');
+    const imgElement = document.createElement('img');
+    imgElement.src = 'desconocida.png';
+    containerDiv.appendChild(imgElement);
+    pisadimgDiv.innerHTML = containerDiv.innerHTML;
+    return;
+  }
+
+  // Clear previous chord
+  chordGenerator.clearChords('pisadimg');
+  
+  // Get tablature and convert to proper format
+  const tablature = getTablature();
+  
+  // Convert tablature array to string format that matches the demo
+  // e.g., [3, 2, 0, 0, 0, 3] -> "3 2 0 0 0 3"
+  const tabString = tablature
+    .map(fret => fret === -1 ? 'X' : fret)
+    .join(' ');
+  
+  console.log('Chord Generation Debug:');
+  console.log('- Chord Name:', chordName);
+  console.log('- Tablature String:', tabString);
+  
+  // Use createChordFromTablature like in the demo
+  try {
+    chordGenerator.createChordFromTablature({
+      name: chordName,
+      tablature: tabString,
+      containerId: 'pisadimg',
+      size: 4
+    });
+  } catch (error) {
+    console.error('Chord generation error:', error);
+  }
+}
+
+// Function to open the iINFO modal
+function openModal() {
+  document.getElementById('notation-modal').style.display = 'grid';
+}
+
+// Function to close the modal
+function closeModal() {
+  document.getElementById('notation-modal').style.display = 'none';
+}
+
+// Close the modal when the user clicks anywhere outside of the modal
+window.onclick = function(event) {
+  const modal = document.getElementById('notation-modal');
+  if (event.target == modal) {
+    modal.style.display = 'none';
+  }
 }
 
 function getLowestNote(acordeNotas) {
@@ -191,6 +273,17 @@ function getLowestNote(acordeNotas) {
   return acordeNotas[0];
 }
 
+function codificarNameImg(str) {
+  if(!str) return "";
+  try {
+    // OJO: El signo '∕' antes de '<sub>' en '∕<sub>' es especial, no es una / normal!!
+    return str.replaceAll('/', '∕').replaceAll('&#183;','·'); // Reemplazar '/' con '∕' para evitar conflictos con la URL
+  } catch (e) {
+      console.error("Error decoding component:", e);
+      return str; // Return original string if decoding fails.
+  }
+}
+
 function updateChordInfo(setonica='') {
   const acordeNotas = [];
   for (let i = 0; i < NUM_STRINGS; i++) {
@@ -203,11 +296,11 @@ function updateChordInfo(setonica='') {
     return;
   }
   if(REVERSA)acordeNotas.reverse(); // REVERSA
-
+  
   notasInput.textContent = acordeNotas.join(", "); // Ahora muestra las notas con octavas
   let notasUnicasConteo = contarNotas(acordeNotas);
   const lowestNote = getLowestNote(acordeNotas);
-
+  
   // Buscamos la tónica más adecuada
   let tonica;
   if (TONIC_DEFINED_BY<0) { // Primera cuerda
@@ -233,19 +326,27 @@ function updateChordInfo(setonica='') {
     console.log("Forzar tónica:", setonica);
     tonica = setonica;
   }
-
   // calculamos las posibles interpretaciones
   const interpretaciones = getChordInterpretations(acordeNotas);
-
+  
   // Actualizar salida UI para usuario
   tonicaInput.textContent = tonica;
   bajoInput.textContent = lowestNote;
   unicasInput.textContent = notasUnicasConteo[0].join(", ");
   conteoInput.textContent = Object.values(notasUnicasConteo[1]).join(", ");
   interpretaInput.innerHTML = createDataTable(interpretaciones,tonica);
-  acordeInput.innerHTML = acordeMasProbable(interpretaciones,tonica,lowestNote);
+  acordeInput.innerHTML = formatChordString(acordeMasProbable(interpretaciones,tonica,lowestNote));
+  acordeReduxInput.value = codificarNameImg(acordeMasProbable(interpretaciones,tonica,lowestNote,true).replace(/<[^>]*>/g, ''));
   // Actualizamos el estilo de las cuerdas (muteadas o no)
   updateStringMutingStyle();
+  
+  setChordImage(acordeReduxInput.value);
+  
+  const tablatureInput = document.getElementById('tablature-input');
+  tablatureInput.value = getTablature().join(' '); // Update the input value
+  
+  // Highlight the piano keys
+  updatePianoKeys(acordeNotas, tonica);
 }
 
 function vaciarUI() {
@@ -255,21 +356,22 @@ function vaciarUI() {
   tonicaInput.textContent = "";
   bajoInput.textContent = "";
   acordeInput.textContent = "";
+  acordeReduxInput.value = "";
   interpretaInput.textContent = "";
 }
 
 /* function updateStringMutingStyle() {
-  for (let stringIndex = 0; stringIndex < NUM_STRINGS; stringIndex++) {
-    const isMuted = selectedFrets[stringIndex] < 0; // String is muted if no fret is selected
-    for (let fretIndex = 0; fretIndex < NUM_FRETS; fretIndex++) {
-        const cell = fretboardCells[fretIndex + stringIndex * NUM_FRETS];
-        if (isMuted) {
-          cell.classList.add('muted');
-        } else {
-          cell.classList.remove('muted');
-        }
-    }
-  }
+for (let stringIndex = 0; stringIndex < NUM_STRINGS; stringIndex++) {
+const isMuted = selectedFrets[stringIndex] < 0; // String is muted if no fret is selected
+for (let fretIndex = 0; fretIndex < NUM_FRETS; fretIndex++) {
+const cell = fretboardCells[fretIndex + stringIndex * NUM_FRETS];
+if (isMuted) {
+cell.classList.add('muted');
+} else {
+cell.classList.remove('muted');
+}
+}
+}
 } */
 function updateStringMutingStyle() {
   for (let stringIndex = 0; stringIndex < NUM_STRINGS; stringIndex++) {
@@ -279,6 +381,7 @@ function updateStringMutingStyle() {
       const cell = fretboardCells[cellIndex];
       if (isMuted) {
         cell.classList.add('muted');
+        cell.classList.remove('selected');
       } else {
         cell.classList.remove('muted');
       }
@@ -286,31 +389,34 @@ function updateStringMutingStyle() {
   }
 }
 
-function acordeMasProbable(interpretaciones,tonica,bajo) {
+function acordeMasProbable(interpretaciones,tonica,bajo,reducido=false) {
   tonica = tonica.replace(/[0-9]/g, '');
   bajo = bajo.replace(/[0-9]/g, '');
+  tipo = reducido ? 4:3;
   for (let i = 0; i < interpretaciones.length; i++) {
     const row = interpretaciones[i];
     if(row[0][0]==tonica) {
-      if(tonica!=bajo) return row[4]+'&#8260;<sub>'+bajo+'</sub>';
-      else return row[4];
+      n = reducido ? row[4]:tonica+row[3]; // Cambia el acorde: 3 = Acorde Completo sin tónica (por eso se agrega) ó 4 = Reducido, sin paréntesis y ya trae tónica
+      // if(tonica!=bajo) return n+'&#8260;<sub>'+bajo+'</sub>';
+      if(tonica!=bajo) return n+'<sub>/'+bajo+'</sub>'; 
+      else return n;
     }
   }
-  if (interpretaciones[0].length<MIN_NOTES_FOR_CHORD) return "Insuficiente"
-  return "ERROR: No se encontró la tónica en la pisada!"
+  if (interpretaciones[0].length<MIN_NOTES_FOR_CHORD) return "?";//"Insuficiente";
+  return "ERROR: No se encontró la tónica en la pisada!";
 }
 
 function createDataTable(data,tonica) {
   tonica = tonica.replace(/[0-9]/g, '');
-
+  
   const rows = data.length;
   const cols = data[0].length;
   if (cols<MIN_NOTES_FOR_CHORD) return "Insuficiente";
-
+  
   let html = `<table class="clicable" onclick="rowRadio(event);">`;
   // html += `<tr><th>&#932</th><th>&#127901;</th><th>#</th><th>&#128477;</th><th>&#119070;</th><th>&#128504;</th></tr>`;
   html += `<tr><th>&#932</th><th>&sung;</th><th>&#128477;</th><th>&#119070;</th><th>&#9745;</th></tr>`; // Recortado
-
+  
   for (let i = 0; i < rows; i++) {
     html += `<tr>`;
     for (let j = -1; j < cols; j++) {
@@ -329,9 +435,9 @@ function createDataTable(data,tonica) {
     }
     html += `</tr>`;
   }
-
+  
   html += `</table>`;
-
+  
   return html;
 }
 
@@ -417,12 +523,13 @@ function getChordInterpretations(acordeNotas) {
     intervalo.push(base);
     i++;
   }
-
+  
   const intervalos = rotateAndShift(intervalo);
   const lista = [];
   for (let i = 0; i < intervalos.length; i++) {
     const intint = intepretarIntervalo(intervalos[i]);
-    const acorde = '<b>'+uniqueNotes[i]+'</b>'+intint.replace(/\([^)]*\)/g, "").replace(/([245679])(?=[1245679])/g, "$1·") // Elimina lo que está entre paréntesis
+    const acorde = '<b>'+uniqueNotes[i]+'</b>'+intint.replace(/\([^)]*\)/g, "").replace(/([245679])(?=[1245679])/g, "$1&#183;") // Elimina lo que está entre paréntesis
+    // const acorde = '<b>'+uniqueNotes[i]+'</b>'+intint.replace(/\([^)]*\)/g, "").replace(/([245679])(?=[1245679])/g, "$1·") // Elimina lo que está entre paréntesis
     lista.push([
       rotateLeft(uniqueNotes,i),
       rotateLeft(numerNotas,i),
@@ -436,15 +543,17 @@ function getChordInterpretations(acordeNotas) {
 
 // Interpreta los intervalos
 function intepretarIntervalo(intervals) {
-  if (intervals.length < 2) return ""; 
-  if (intervals.length < 3) return acordesConocidos[intervals.join('-')] || "?";
+  console.log("Versión:", acordesConocidosVersion);
+  const il = intervals.length;
+  if (il < 2) return ""; 
+  if (il < 3) return acordesConocidos[intervals.join(' ')] || "?";
   // Check for known chords, prioritizing longer matches
-  for (let i = intervals.length; i >= 2; i--) {
-    const chordKey = intervals.slice(0, i).join('-');
+  for (let i = il; i >= 2; i--) {
+    const chordKey = intervals.slice(0, i).join(' ');
     if (acordesConocidos[chordKey]) {
       let suffix = '';
-      if (i < intervals.length) {
-        for (let j = i; j < intervals.length; j++) {
+      if (i < il) {
+        for (let j = i; j < il; j++) {
           const diff = intervals[j] - (intervals[0]==0?0:intervals[0]); // Corrected interval calculation!
           if(diff==1) suffix += '9';
           if(diff==9) suffix += '6';
@@ -453,26 +562,31 @@ function intepretarIntervalo(intervals) {
           if(diff==14) suffix += '13';
         }
       }
-      if(suffix!='') {
-        suffix = '?';
+      if(suffix != '' || il!=i) {
+        suffix += '?';
       }
-      return acordesConocidos[chordKey] + suffix;
+      return acordesConocidos[chordKey] + suffix + (il!=i ? '?':'');
     } else {
       // No se encontró la definición
       // console.log(chordKey,acordesConocidos[chordKey]);
     }
   }
-
+  
   return "?";
 }
 
+function toggleExtraData() {
+  const extraData = document.getElementById('extradata');
+  extraData.classList.toggle('hidden');
+}
+
 /* function getNota(string, fret) {
-  const [, baseNote, octave] = DEFAULT_TUNING[string].match(/([A-G][#b]?)([1-9])/);
-  let noteIndex = todas_las_notas.indexOf(baseNote.toUpperCase());
-  let newOctave = parseInt(octave);
-  let newNoteIndex = (noteIndex + fret) % NUMBER_OF_NOTES;
-  newOctave += Math.floor((noteIndex + fret) / NUMBER_OF_NOTES); // corrected octave calculation
-  return todas_las_notas[newNoteIndex] + newOctave;
+const [, baseNote, octave] = DEFAULT_TUNING[string].match(/([A-G][#b]?)([1-9])/);
+let noteIndex = todas_las_notas.indexOf(baseNote.toUpperCase());
+let newOctave = parseInt(octave);
+let newNoteIndex = (noteIndex + fret) % NUMBER_OF_NOTES;
+newOctave += Math.floor((noteIndex + fret) / NUMBER_OF_NOTES); // corrected octave calculation
+return todas_las_notas[newNoteIndex] + newOctave;
 } */
 
 const selTonica = document.getElementById('selTonicDef');
@@ -500,27 +614,98 @@ function setInstrumento(n) {
 }
 
 function setAcorde(acorde) {
-  selectedFrets = acorde; // Acorde inicial
-  if(REVERSA)selectedFrets.reverse(); // REVERSA
+  selectedFrets = acorde.map(fret => fret === 'x' ? -1 : parseInt(fret)); // Convert 'x' to -1
+  if(REVERSA) selectedFrets.reverse(); // REVERSA
   for (let stringIndex = 0; stringIndex < NUM_STRINGS; stringIndex++) {
     const targetFret = selectedFrets[stringIndex];
+    let cellIndex;
     if (targetFret !== -1) {  // Only select if a fret is chosen for the string
-        let cellIndex = targetFret * NUM_STRINGS + stringIndex;
-        fretboardCells[cellIndex].classList.add('selected');
+      cellIndex = targetFret * NUM_STRINGS + stringIndex;
+      fretboardCells[cellIndex].classList.add('selected');
+    } else {
+      //Unselect muted strings
+      for (let fretIndex = 0; fretIndex < NUM_FRETS; fretIndex++) {
+        cellIndex = fretIndex * NUM_STRINGS + stringIndex;
+        fretboardCells[cellIndex].classList.remove('selected');
+      }
     }
   }
   updateChordInfo();
 }
 
+// Formatea HTML los nombre completos o reducidos de acordes
+function formatChordString(chordString) {
+  if(!chordString) return "";
+  return chordString.replace(/([245679])(?=[1245679])/g, "$1&#183;").replace(/([A-G][#b]?)([^()]*)\(?([^()]*)\)?/g, (match, note, before, parens) => {
+    let formattedString = "";
+    if(note) formattedString += `<b>${note}</b>`
+    if(before) formattedString += before;
+    if(parens) formattedString += `<sup>(${parens})</sup>`;
+    return formattedString;
+    }
+  );
+}
+
+// Crea el piano
+function createPiano() {
+  pianoContainer.innerHTML = ''; // Clear existing keys
+  pianoKeys.length = 0; // Clear existing array
+  for (let i = 0; i < pianoNotes.length; i++) {
+    const note = pianoNotes[i];
+    const key = document.createElement('div');
+    key.classList.add('key');
+    // NEW LINE: Set note text content based on current tonic
+    key.textContent = getNoteName(pianoNotesIndexes[i], 'C'); // Default to C when piano is created. This will change in updatePianoKeys()
+    key.dataset.note = note;
+    
+    if (note.includes('#')) {
+      key.classList.add('black-key');
+    } else {
+      key.classList.add('white-key');
+    }
+    key.addEventListener('click', selectPianoKey);
+    pianoContainer.appendChild(key);
+    pianoKeys.push(key);
+  }
+}
+function selectPianoKey(event) {
+  const key = event.target;
+  const note = key.dataset.note;
+  console.log(`Piano key ${note} was clicked`);
+  // Here you would add the logic to select a key
+}
+// FULL MODIFIED FUNCTION
+function updatePianoKeys(acordeNotas, tonica) {
+  pianoKeys.forEach((key, index) => {
+    key.classList.remove('active'); // Reset key styles
+    // NEW LINE: Update the note label based on the current tonic
+    key.textContent = getNoteName(pianoNotesIndexes[index], tonica);
+  });
+  const tonicaIndex = todas_las_notas.indexOf(tonica.replace(/[0-9]/g, ''));
+  
+  acordeNotas.forEach(note => {
+    const noteName = note.replace(/[0-9]/g, '');
+    const noteIndex = todas_las_notas.indexOf(noteName);
+    
+    // Calculate the position of the note relative to C major scale
+    let relativeNoteIndex = (noteIndex - tonicaIndex + NUMBER_OF_NOTES) % NUMBER_OF_NOTES;
+    const pianoIndex = pianoNotesIndexes[relativeNoteIndex];
+    
+    if (pianoIndex < pianoKeys.length && pianoIndex >= 0) {
+      pianoKeys[pianoIndex].classList.add('active');
+    }
+  });
+}
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
-      .then((registration) => {
-        console.log('Service Worker registered: ', registration);
-      })
-      .catch((error) => {
-        console.log('Service Worker registration failed: ', error);
-      });
+    .then((registration) => {
+      console.log('Service Worker registered: ', registration);
+    })
+    .catch((error) => {
+      console.log('Service Worker registration failed: ', error);
+    });
   });
 }
 let iniciado = false;
@@ -543,4 +728,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
     instrumento = parseInt(searchParams.get('i'));
   }
   setInstrumento(instrumento);
+  createPiano(); //Initialize the piano
+  // loadFretPositions(); // memoria último acorde
+  
+  // loadScript -> acordesConocidos
+  loadScript('acordesConocidos.js', loadFretPositions)
+    .then(() => {
+      console.log("External script executed");
+      // You can now use functions or variables from external-script.js here
+    })
+    .catch(error => {
+      console.error("There was an error:", error);
+    });
 });

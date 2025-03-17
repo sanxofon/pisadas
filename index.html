@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es" xml:lang="es">
 <head>
@@ -43,7 +42,7 @@
   <!-- FAVICON -->
   <link rel="shortcut icon" href="https://sanxofon.github.io/pisadas/icon-192.png" type="image/png">
   <link rel="icon" href="https://sanxofon.github.io/pisadas/icon-192.png" type="image/png">
-
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -63,24 +62,58 @@
       </div>
     </div>
     <div class="chord-info">
-      <div>
-        <h1 id="acorde"></h1>
+      <div class="centrar">
+        <div id="acorde"></div>
+        <input type="hidden" id="acorderedux">
         <div id="interpretaciones"></div>
       </div>
-      <div>
-        <div>La Tónica es <select title="Seleccionar la tónica por..." id="selTonicDef">
+      <div class="centrar">
+        La Tónica es 
+        <select title="Seleccionar la tónica por..." id="selTonicDef">
           <option value="0">La nota más grave</option>
           <option value="1">La nota más común</option>
           <option value="-1">La cuerda superior</option>
-        </select></div>
+        </select>
+        <div class="extradata-icon" onclick="toggleExtraData()">&#9881;</div>
+      </div>
+      <div class="centrar hidden" id="extradata">
         <div>Tónica: <b id="tonica"></b></div>
         <div>Bajo: <span id="bajo"></span></div>
         <div>Notas: <span id="notas"></span></div>
         <div>Únicas: <span id="unicas"></span></div>
         <div>Conteo: <span id="conteo"></span></div>
       </div>
+      <!-- Text Input for Tablature -->
+      <div class="tablature-input-container centrar">
+        <input type="text" id="tablature-input" placeholder="Tablatura: x 0 2 2 2 0" value="x 0 2 2 2 0">
+        <button onclick="setTablature()">OK</button>
+      </div>
+
+      <!-- Piano Keyboard -->
+      <div class="piano-container">
+        <div class="piano">
+          <!-- Piano keys will be generated here by JS -->
+        </div>
+      </div>
+
+      <!-- Image of the chord -->
+      <div id="pisadimg"></div>
+
     </div>
   </div>
+  <!-- Info Icon -->
+  <div class="modal-info-icon" onclick="openModal()">i</div>
+  
+  <!-- Modal -->
+  <div id="notation-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-title">Guía sobre la notación utilizada <span class="close" onclick="closeModal()">×</span></div>
+      <iframe src="notacion.html" frameborder="0" style="width: 100%; height: 100%;"></iframe>
+    </div>
+  </div>
+  
+  <script src="chords.js"></script>
+  <script src="chordGenerator.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
