@@ -1,7 +1,7 @@
 // Variables a incluir en Configuración de usuario en futuras versiones
 let NUM_STRINGS = 6;  // Número de cuerdas
 let NUM_FRETS = 13;    // Número de trastes
-let TONIC_DEFINED_BY = 0; // + Grave:  0 = La nota más grave, el bajo, es la tónica
+let TONIC_DEFINED_BY = 0; // 0 = más probable, 1 = más grave, 2 = más común, 3 = cuerda superior
 // xConteo:  1 = La nota que más aparece es la tónica aunque no sea el bajo
 // Primera: -1 = La primera cuerda (de arriba a abajo!) es la tónica
 
@@ -20,23 +20,26 @@ const instrumentos = [
   {
     't': ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'], // TUNING
     's': 6, // NUM STRINGS
-    'f': 13, // NUM FRETS
     'c': [-1,-1,-1,-1,-1,-1], // INITIAL CHORD
     'n': 'Guitarra', // NAME
   },
   {
+    't': ['D2', 'A2', 'D3', 'F#3', 'A3', 'D4'], // TUNING
+    's': 6, // NUM STRINGS
+    'c': [-1,-1,-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Guitarra en D', // NAME
+  },
+  {
     't': ['G3', 'C3', 'E4', 'A4', 'G3'], // TUNING
     's': 5, // NUM STRINGS
-    'f': 12, // NUM FRETS
     'c': [-1,-1,-1,-1,-1], // INITIAL CHORD
     'n': 'Jarana', // NAME
   },
   {
     't': ['A3', 'C#4', 'E4', 'A4', 'A3'], // TUNING
     's': 5, // NUM STRINGS
-    'f': 12, // NUM FRETS
     'c': [-1,-1,-1,-1,-1], // INITIAL CHORD
-    'n': 'Jarana', // NAME
+    'n': 'Jarana en A', // NAME
   },
 ];
 
@@ -60,7 +63,9 @@ const interpretaInput = document.querySelector('#interpretaciones');
 let selectedFrets = Array(NUM_STRINGS).fill(-1);
 let mutedStrings = Array(NUM_STRINGS).fill(true);  // All strings muted initially
 let fretboardCells = []; //Array of fretboard cells
+
 const STORAGE_KEY = 'lastFretPositions'; // memoria último acorde
+const FRETS_STORAGE_KEY = 'numFrets'; // memoria número de trastes
 
 const todas_las_notas = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
@@ -661,10 +666,9 @@ function setInstrumento(n) {
   instrumentos[n];
   DEFAULT_TUNING = instrumentos[n]['t'];
   NUM_STRINGS = instrumentos[n]['s'];
-  NUM_FRETS = instrumentos[n]['f'];
-  const r=document.querySelector(':root');
-  r.style.setProperty('--num-strings', NUM_STRINGS);
-  r.style.setProperty('--num-frets', NUM_FRETS);
+  // NUM_FRETS = instrumentos[n]['f'];
+  fretboard.style.setProperty('--num-strings', NUM_STRINGS);
+  // fretboard.style.setProperty('--num-frets', NUM_FRETS);
   createGetNota();
   createFretboard();
   setAcorde(instrumentos[n]['c']);
@@ -779,6 +783,18 @@ window.addEventListener('click', (event) => {
   }
 });
 window.addEventListener('DOMContentLoaded', (event) => {
+  // Load saved number of frets if exists
+  const savedFrets = localStorage.getItem(FRETS_STORAGE_KEY);
+  if (savedFrets) {
+    const numFrets = parseInt(savedFrets);
+    if (numFrets >= 8 && numFrets <= 13) {
+      NUM_FRETS = numFrets;
+      console.log('NUM_FRETS:', NUM_FRETS);
+      document.getElementById('numFrets').value = NUM_FRETS;
+      fretboard.style.setProperty('--num-frets', NUM_FRETS);
+    }
+  }
+  // Load saved instrument if exists
   let searchParams = new URLSearchParams(window.location.search);
   if(searchParams.has('i')) {
     instrumento = parseInt(searchParams.get('i'));
@@ -787,6 +803,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
   createPiano(); //Initialize the piano
   // loadFretPositions(); // memoria último acorde
   
+  // Event listener for fret number input
+  document.getElementById('numFrets').addEventListener('change', function(e) {
+    const newValue = parseInt(e.target.value);
+    if (newValue >= 8 && newValue <= 13) {
+      NUM_FRETS = newValue;
+      localStorage.setItem(FRETS_STORAGE_KEY, NUM_FRETS.toString());
+      fretboard.style.setProperty('--num-frets', NUM_FRETS);
+      createGetNota();
+      createFretboard();
+      setAcorde(instrumentos[instrumento]['c']);
+    } else {
+      e.target.value = NUM_FRETS; // Reset to current value if invalid
+    }
+  });
+
   // loadScript -> acordesConocidos
   loadScript('acordesConocidos.js', loadFretPositions)
     .then(() => {

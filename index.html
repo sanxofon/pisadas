@@ -52,8 +52,9 @@
   <select id="instrumento" onchange="cambiarInstrumento(this.value);" title="Selecciona un instrumento">
     <option value="-1"> - Instrumento - </option>
     <option value="0">Guitarra ( E A D G B E )</option>
-    <option value="1">Jarana ( G C E A G )</option>
-    <option value="2">Jarana en A ( A C# E A A )</option>
+    <option value="1">Guitarra en D ( D A D F# A D )</option>
+    <option value="2">Jarana ( G C E A G )</option>
+    <option value="3">Jarana en A ( A C# E A A )</option>
   </select>
   <div class="contenedor-general">
     <div class="fretboard-container">
@@ -112,7 +113,14 @@
       <div class="modal-title">Configuración <span class="close" onclick="closeModal()">×</span></div>
       <hr>
       <div class="modal-table">
-        <div class="padding-20 blanco">[Configuraciones...]</div>
+        <table class="config-table">
+          <tr>
+            <td class="config-label">Número de trastes en la interfaz</td>
+            <td class="config-input">
+              <input type="number" id="numFrets" min="8" max="13" value="13">
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>

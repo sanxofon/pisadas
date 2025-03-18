@@ -66,7 +66,7 @@ b, em {
   flex: 1 1 320px;
   padding: 10px;
   box-sizing: border-box;
-  max-height: 90vh;
+  max-height: 98vh;
   overflow: auto;
 }
 
@@ -77,7 +77,8 @@ b, em {
     overflow: auto;
   }
   .fretboard-container {
-    height: 53vh;
+    max-height: 380px;
+    height: auto;
     overflow: auto;
   }
   .piano-container {
@@ -92,9 +93,8 @@ b, em {
   grid-template-rows: repeat(var(--num-frets), 1fr); /* num-frets */
   width: 100%;
   max-width: calc(45px * var(--num-strings)); /* num-strings */
-  height: 90vh;
-  max-height: calc(85px * var(--num-frets)); /* num-frets */
-  min-height: calc(65px * var(--num-strings)); /* num-strings */
+  max-height: 90vh;
+  min-height: calc(45px * var(--num-frets)); /* num-frets */
   border-left: 2px solid black; /* borde izquierdo */
   border-right: 2px solid black; /* borde derecho */
   margin: 0 auto;
@@ -363,4 +363,40 @@ td {
 
 #pisadimg {
   margin: 0 auto;
+}
+
+
+.config-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.config-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.config-label {
+  width: 70%;
+  font-size: 0.9em;
+  background-color: #f8f8f8;
+}
+
+.config-input {
+  width: 30%;
+  text-align: center;
+}
+
+.config-input input[type="number"] {
+  width: 60px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.config-input input[type="number"]:focus {
+  outline: none;
+  border-color: #aaccee;
+  box-shadow: 0 0 5px rgba(170, 204, 238, 0.5);
 }
