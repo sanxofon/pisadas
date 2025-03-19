@@ -72,10 +72,22 @@ const instrumentos = [
     'n': 'Jarana en A Mayor', // NAME
   },
   {
+    't': ['G3', 'D3', 'A3', 'E4'], // TUNING
+    's': 4, // NUM STRINGS
+    'c': [-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Mandolina', // NAME (Standard GCEA tuning)
+  },
+  {
     't': ['C4', 'E4', 'G4', 'A4'], // TUNING
     's': 4, // NUM STRINGS
     'c': [-1,-1,-1,-1], // INITIAL CHORD
     'n': 'Ukulele', // NAME (Standard GCEA tuning)
+  },
+  {
+    't': ['G3', 'C4', 'E4', 'A4'], // TUNING
+    's': 4, // NUM STRINGS
+    'c': [-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Ukulele en G', // NAME (Standard GCEA tuning)
   },
   {
     't': ['D4', 'G4', 'B4', 'E5'], // TUNING
@@ -84,10 +96,34 @@ const instrumentos = [
     'n': 'Ukulele en D', // NAME (D tuning)
   },
   {
-    't': ['D3', 'G3', 'B3', 'D4'], // TUNING
+    't': ['D3', 'G3', 'B4', 'D4'], // TUNING
     's': 4, // NUM STRINGS
     'c': [-1,-1,-1,-1], // INITIAL CHORD
-    'n': 'Cavaquinho', // NAME (Standard Brazilian tuning)
+    'n': 'Cavaquinho Brasil en D', // NAME (Standard Brazilian tuning)
+  },
+  {
+    't': ['D3', 'G3', 'B4', 'E4'], // TUNING
+    's': 4, // NUM STRINGS
+    'c': [-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Cavaquinho Brasil en D (Moderna)', // NAME (Modern Brazilian tuning)
+  },
+  {
+    't': ['G3', 'D4', 'A4', 'E4'], // TUNING
+    's': 4, // NUM STRINGS
+    'c': [-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Cavaquinho Brasil en G', // NAME (Secondary Brazilian tuning)
+  },
+  {
+    't': ['C3', 'G3', 'A3', 'D4'], // TUNING
+    's': 4, // NUM STRINGS
+    'c': [-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Cavaquinho Portugal en C', // NAME (Standard Portuguese tuning)
+  },
+  {
+    't': ['D3', 'A3', 'B4', 'C4'], // TUNING
+    's': 4, // NUM STRINGS
+    'c': [-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Cavaquinho Portugal en D', // NAME (Secondary Portuguese tuning)
   }
 ];
 
@@ -814,7 +850,8 @@ function populateInstrumentSelect() {
   for (let i = 0; i < instrumentos.length; i++) {
     const option = document.createElement('option');
     option.value = i;
-    option.textContent = `${instrumentos[i].n} ( ${instrumentos[i].t.join(' ')} )`;
+    const l = instrumentos[i].c.length;
+    option.textContent = `${l}: ${instrumentos[i].n} [${instrumentos[i].t.join(' ')}]`;
     option.selected = (i === instrumento); // Add this line to select current instrument
     select.appendChild(option);
   }
