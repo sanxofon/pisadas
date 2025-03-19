@@ -27,7 +27,37 @@ const instrumentos = [
     't': ['D2', 'A2', 'D3', 'F#3', 'A3', 'D4'], // TUNING
     's': 6, // NUM STRINGS
     'c': [-1,-1,-1,-1,-1,-1], // INITIAL CHORD
-    'n': 'Guitarra en D', // NAME
+    'n': 'Guitarra en D Mayor', // NAME
+  },
+  {
+    't': ['D2', 'G2', 'D3', 'G3', 'B3', 'D4'], // TUNING
+    's': 6, // NUM STRINGS
+    'c': [-1,-1,-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Guitarra en G Mayor', // NAME (Open G tuning)
+  },
+  {
+    't': ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'], // TUNING
+    's': 6, // NUM STRINGS
+    'c': [-1,-1,-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Guitarra Open D', // NAME (Open D tuning)
+  },
+  {
+    't': ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'], // TUNING
+    's': 6, // NUM STRINGS
+    'c': [-1,-1,-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Guitarra Drop D', // NAME (Drop D tuning)
+  },
+  {
+    't': ['C2', 'G2', 'C3', 'G3', 'C4', 'E4'], // TUNING
+    's': 6, // NUM STRINGS
+    'c': [-1,-1,-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Guitarra en C', // NAME (Open C tuning)
+  },
+  {
+    't': ['E2', 'A2', 'E3', 'A3', 'C#4', 'E4'], // TUNING
+    's': 6, // NUM STRINGS
+    'c': [-1,-1,-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Guitarra en A Mayor', // NAME (Open A tuning)
   },
   {
     't': ['G3', 'C3', 'E4', 'A4', 'G3'], // TUNING
@@ -39,8 +69,26 @@ const instrumentos = [
     't': ['A3', 'C#4', 'E4', 'A4', 'A3'], // TUNING
     's': 5, // NUM STRINGS
     'c': [-1,-1,-1,-1,-1], // INITIAL CHORD
-    'n': 'Jarana en A', // NAME
+    'n': 'Jarana en A Mayor', // NAME
   },
+  {
+    't': ['C4', 'E4', 'G4', 'A4'], // TUNING
+    's': 4, // NUM STRINGS
+    'c': [-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Ukulele', // NAME (Standard GCEA tuning)
+  },
+  {
+    't': ['D4', 'G4', 'B4', 'E5'], // TUNING
+    's': 4, // NUM STRINGS
+    'c': [-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Ukulele en D', // NAME (D tuning)
+  },
+  {
+    't': ['D3', 'G3', 'B3', 'D4'], // TUNING
+    's': 4, // NUM STRINGS
+    'c': [-1,-1,-1,-1], // INITIAL CHORD
+    'n': 'Cavaquinho', // NAME (Standard Brazilian tuning)
+  }
 ];
 
 // COSTANTES GLOBALES
@@ -198,14 +246,15 @@ function saveFretPositions() {
 
 // NEW FUNCTION (before setTablature())
 function loadFretPositions() {
-  const savedPositions = localStorage.getItem(STORAGE_KEY);
+  let savedPositions = localStorage.getItem(STORAGE_KEY);
   if (savedPositions) {
+    savedPositions = JSON.parse(savedPositions);
     if (NUM_STRINGS!==savedPositions.length) { // Fret positions cleared from localStorage due to NUM_STRINGS change
       localStorage.removeItem(STORAGE_KEY);
       selectedFrets = Array(NUM_STRINGS).fill(-1);
       if (verbose) console.log('Fret positions deleted from localStorage for a change in NUM_STRINGS');
     } else {
-      selectedFrets = JSON.parse(savedPositions);
+      selectedFrets = savedPositions;
       setAcorde(selectedFrets);
       if (verbose) console.log('Fret positions loaded from localStorage:', selectedFrets);
     }
@@ -605,11 +654,11 @@ function calcularAcordeMasSimple(interpretaciones,lowestNote,masComun) {
 function intepretarIntervalo(intervals) {
   const il = intervals.length;
   if (il < 2) return ""; 
-  if (il < 3) return acordesConocidos[intervals.join(' ')] || "?";
+  if (il < 3) return acordesConocidos[intervals.join(' ')][0] || "?";
   // Check for known chords, prioritizing longer matches
   for (let i = il; i >= 2; i--) {
     const chordKey = intervals.slice(0, i).join(' ');
-    if (acordesConocidos[chordKey]) {
+    if (acordesConocidos[chordKey][0]) {
       let suffix = '';
       if (i < il) {
         for (let j = i; j < il; j++) {
@@ -624,10 +673,10 @@ function intepretarIntervalo(intervals) {
       if(suffix != '' || il!=i) {
         suffix += '?';
       }
-      return acordesConocidos[chordKey] + suffix + (il!=i ? '?':'');
+      return acordesConocidos[chordKey][0] + suffix + (il!=i ? '?':'');
     } else {
       // No se encontró la definición
-      if (verbose) console.log("No se encontró la definición", chordKey, acordesConocidos[chordKey]);
+      if (verbose) console.log("No se encontró la definición", chordKey, acordesConocidos[chordKey][0]);
     }
   }
   
@@ -663,15 +712,16 @@ function cambiarInstrumento(i) {
 function setInstrumento(n) {
   n = parseInt(n);
   if(n<0 || n>=instrumentos.length) return;
-  instrumentos[n];
-  DEFAULT_TUNING = instrumentos[n]['t'];
-  NUM_STRINGS = instrumentos[n]['s'];
+  instrumento = n;
+  instrumentos[instrumento];
+  DEFAULT_TUNING = instrumentos[instrumento]['t'];
+  NUM_STRINGS = instrumentos[instrumento]['s'];
   // NUM_FRETS = instrumentos[n]['f'];
   fretboard.style.setProperty('--num-strings', NUM_STRINGS);
   // fretboard.style.setProperty('--num-frets', NUM_FRETS);
   createGetNota();
   createFretboard();
-  setAcorde(instrumentos[n]['c']);
+  setAcorde(instrumentos[instrumento]['c']);
 }
 
 function setAcorde(acorde) {
@@ -758,6 +808,18 @@ function updatePianoKeys(acordeNotas, tonica) {
   });
 }
 
+// Populate instrument select
+function populateInstrumentSelect() {
+  const select = document.getElementById('instrumento');
+  for (let i = 0; i < instrumentos.length; i++) {
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = `${instrumentos[i].n} ( ${instrumentos[i].t.join(' ')} )`;
+    option.selected = (i === instrumento); // Add this line to select current instrument
+    select.appendChild(option);
+  }
+}
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
@@ -782,6 +844,20 @@ window.addEventListener('click', (event) => {
     iniciado = true;
   }
 });
+// Event listener for fret number input
+document.getElementById('numFrets').addEventListener('change', function(e) {
+  const newValue = parseInt(e.target.value);
+  if (newValue >= 8 && newValue <= 13) {
+    NUM_FRETS = newValue;
+    localStorage.setItem(FRETS_STORAGE_KEY, NUM_FRETS.toString());
+    fretboard.style.setProperty('--num-frets', NUM_FRETS);
+    createGetNota();
+    createFretboard();
+    setAcorde(instrumentos[instrumento]['c']);
+  } else {
+    e.target.value = NUM_FRETS; // Reset to current value if invalid
+  }
+});
 window.addEventListener('DOMContentLoaded', (event) => {
   // Load saved number of frets if exists
   const savedFrets = localStorage.getItem(FRETS_STORAGE_KEY);
@@ -801,22 +877,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
   }
   setInstrumento(instrumento);
   createPiano(); //Initialize the piano
+  // Populate instruments select
+  populateInstrumentSelect();
   // loadFretPositions(); // memoria último acorde
-  
-  // Event listener for fret number input
-  document.getElementById('numFrets').addEventListener('change', function(e) {
-    const newValue = parseInt(e.target.value);
-    if (newValue >= 8 && newValue <= 13) {
-      NUM_FRETS = newValue;
-      localStorage.setItem(FRETS_STORAGE_KEY, NUM_FRETS.toString());
-      fretboard.style.setProperty('--num-frets', NUM_FRETS);
-      createGetNota();
-      createFretboard();
-      setAcorde(instrumentos[instrumento]['c']);
-    } else {
-      e.target.value = NUM_FRETS; // Reset to current value if invalid
-    }
-  });
 
   // loadScript -> acordesConocidos
   loadScript('acordesConocidos.js', loadFretPositions)
