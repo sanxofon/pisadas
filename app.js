@@ -150,6 +150,7 @@ let fretboardCells = []; //Array of fretboard cells
 
 const STORAGE_KEY = 'lastFretPositions'; // memoria último acorde
 const FRETS_STORAGE_KEY = 'numFrets'; // memoria número de trastes
+const DARK_MODE_STORAGE_KEY = 'darkMode'; // Storage key for dark mode preference
 
 const todas_las_notas = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
@@ -216,6 +217,27 @@ function loadScript(url, callback) {
     };
     document.head.appendChild(script);
   });
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const isDarkMode = document.body.classList.contains('dark-mode');
+  localStorage.setItem(DARK_MODE_STORAGE_KEY, isDarkMode ? 'enabled' : 'disabled');
+}
+
+function checkDarkModePreference() {
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  if (!darkModeToggle) return; // Safety check
+  
+  const darkMode = localStorage.getItem(DARK_MODE_STORAGE_KEY);
+  
+  if (darkMode === 'enabled') {
+    document.body.classList.add('dark-mode');
+    darkModeToggle.checked = true;
+  } else {
+    document.body.classList.remove('dark-mode');
+    darkModeToggle.checked = false;
+  }
 }
 
 function createFretboard() {
@@ -817,10 +839,55 @@ function createPiano() {
 }
 function selectPianoKey(event) {
   const key = event.target;
-  const note = key.dataset.note;
+  const note = key.textContent; // Obtenemos el texto de la nota (sin octava)
+  
   if (verbose) console.log(`Nota del piano tocada: ${note}`);
-  // Here you would add the logic to select a key
+  
+  // Verificamos si la tecla ya está iluminada
+  if (key.classList.contains('highlighted')) {
+    // Si ya está iluminada, la desactivamos
+    key.classList.remove('highlighted');
+    clearHighlightedFrets();
+  } else {
+    // Primero, eliminamos cualquier iluminación previa
+    clearHighlightedPianoKeys();
+    clearHighlightedFrets();
+    
+    // Luego iluminamos la tecla actual
+    key.classList.add('highlighted');
+    
+    // Y también iluminamos todos los trastes que contienen esta nota
+    highlightFretsWithNote(note);
+  }
 }
+
+// Función para eliminar la iluminación de todas las teclas del piano
+function clearHighlightedPianoKeys() {
+  pianoKeys.forEach(key => {
+    key.classList.remove('highlighted');
+  });
+}
+
+// Función para eliminar la iluminación de todos los trastes
+function clearHighlightedFrets() {
+  fretboardCells.forEach(cell => {
+    cell.classList.remove('highlighted');
+  });
+}
+
+// Función para iluminar todos los trastes que contienen una nota específica
+function highlightFretsWithNote(noteName) {
+  fretboardCells.forEach(cell => {
+    // Extraemos solo el nombre de la nota sin la octava
+    const cellNoteName = cell.textContent.replace(/[0-9]/g, '');
+    
+    // Si la nota del traste coincide con la nota del piano, iluminamos
+    if (cellNoteName === noteName) {
+      cell.classList.add('highlighted');
+    }
+  });
+}
+
 // FULL MODIFIED FUNCTION
 function updatePianoKeys(acordeNotas, tonica) {
   pianoKeys.forEach((key, index) => {
@@ -916,7 +983,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
   createPiano(); //Initialize the piano
   // Populate instruments select
   populateInstrumentSelect();
-  // loadFretPositions(); // memoria último acorde
+  
+  // Check dark mode preference
+  checkDarkModePreference();
+  
+  // Add event listener for dark mode toggle
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('change', toggleDarkMode);
+  }
 
   // loadScript -> acordesConocidos
   loadScript('acordesConocidos.js', loadFretPositions)

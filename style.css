@@ -1,301 +1,364 @@
 :root {
   --num-strings: 6; /* Número de cuerdas */
   --num-frets: 13;   /* Número de trastes */
+  
+  /* Light mode (default) colors */
+  --background-color: #eee;
+  --text-color: #000;
+  --fretboard-bg: #ffffff;
+  --fretboard-text: #bbbbbb;
+  --fretboard-border: #bbbbbb;
+  --open-string-bg: #dddddd;
+  --open-string-text: #999999;
+  --selected-bg: #aaccee;
+  --selected-text: #000000;
+  --muted-bg: #ccc;
+  --muted-text: #aaa;
+  --table-border: #000;
+  --modal-bg: #fefefe;
+  --modal-title-bg: #f1f1f1;
+  --config-label-bg: #f8f8f8;
+  --piano-white-key: #fff;
+  --piano-black-key: #000;
+  --piano-border: #000;
+  --piano-shadow: #ccc;
+  --h2-bg: #ddd;
+  --input-bg: #fff;
+  --fret-marker-bg: #f6f6f6;
+  --info-icon-bg: aquamarine;
+  --info-icon-hover-bg: aqua;
+  --info-icon-border: #444;
+  --muted-selected-bg: #ddd;
 }
 
+/* Dark mode colors */
+.dark-mode {
+  --background-color: #222;
+  --text-color: #eee;
+  --fretboard-bg: #333;
+  --fretboard-text: #999;
+  --fretboard-border: #555;
+  --open-string-bg: #444;
+  --open-string-text: #aaa;
+  --selected-bg: #2a5d8a;
+  --selected-text: #fff;
+  --muted-bg: #555;
+  --muted-text: #888;
+  --table-border: #666;
+  --modal-bg: #333;
+  --modal-title-bg: #444;
+  --config-label-bg: #3a3a3a;
+  --piano-white-key: #444;
+  --piano-black-key: #222;
+  --piano-border: #666;
+  --piano-shadow: #111;
+  --h2-bg: #444;
+  --input-bg: #333;
+  --fret-marker-bg: #3a3a3a;
+  --info-icon-bg: #2a7d7d;
+  --info-icon-hover-bg: #3a9d9d;
+  --info-icon-border: #777;
+  --muted-selected-bg: #444;
+}
+  
 body, * {
   font-family: "Roboto", sans-serif;
   /* font-family: "Agdasima", sans-serif; */
-  background-color: #eee;
-  color: #000;
+  color: var(--text-color);
   margin: 0;
   padding: 0;
   font-size: 16px;
+  transition: background-color 0.3s, color 0.3s;
+}
+  
+body {
+  background-color: var(--background-color);
 }
 
-h1 {
-  font-size: 2.5em;
-  font-weight: normal;
-  margin: 0;
-  text-align: center;
-}
-
-h2 {
-  font-size: 1.2em;
-  text-align: center;
-  background-color: #ddd;
-  margin: 0;
-}
-
-td, input, select, option {
-  background-color: #fff;
-}
-
-b, em {
-  font-size: inherit;
-  font-weight: bold;
-}
-
-.contenedor-general {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap; /* Permite wrapping a la siguiente linea si necesita */
-  gap: 0;
-}
-
-.chord-info {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 0 auto;
-  flex: 1 1 300px;
-  padding: 10px;
-  box-sizing: border-box;
-  /* max-height: 90vh; */
-  overflow: auto;
-}
-
-.chord-info .centrar {
-  margin: 0 auto;
-}
-
-.fretboard-container {
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  flex: 1 1 320px;
-  padding: 10px;
-  box-sizing: border-box;
-  max-height: 98vh;
-  overflow: auto;
-}
-
-/* Pantalla Vertical */
-@media (max-aspect-ratio: 1/1) { 
+  h1 {
+    font-size: 2.5em;
+    font-weight: normal;
+    margin: 0;
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 1.2em;
+    text-align: center;
+    background-color: var(--h2-bg);
+    margin: 0;
+  }
+  
+  td, input, select, option {
+    background-color: var(--input-bg);
+  }
+  
+  b, em {
+    font-size: inherit;
+    font-weight: bold;
+  }
+  
+  .contenedor-general {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* Permite wrapping a la siguiente linea si necesita */
+    gap: 0;
+  }
+  
   .chord-info {
-    height: 40vh;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0 auto;
+    flex: 1 1 300px;
+    padding: 10px;
+    box-sizing: border-box;
+    /* max-height: 90vh; */
     overflow: auto;
   }
+  
+  .chord-info .centrar {
+    margin: 0 auto;
+  }
+  
   .fretboard-container {
-    max-height: 380px;
-    height: auto;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    flex: 1 1 320px;
+    padding: 10px;
+    box-sizing: border-box;
+    max-height: 98vh;
     overflow: auto;
   }
-  .piano-container {
-    height: 25vh;
+  
+  /* Pantalla Vertical */
+  @media (max-aspect-ratio: 1/1) { 
+    .chord-info {
+      height: 40vh;
+      overflow: auto;
+    }
+    .fretboard-container {
+      max-height: 380px;
+      height: auto;
+      overflow: auto;
+    }
+    .piano-container {
+      height: 25vh;
+    }
   }
-}
+  
+  
+  .fretboard {
+    display: grid;
+    grid-template-columns: repeat(var(--num-strings), 1fr); /* num-strings */
+    grid-template-rows: repeat(var(--num-frets), 1fr); /* num-frets */
+    width: 100%;
+    max-width: calc(45px * var(--num-strings)); /* num-strings */
+    max-height: 90vh;
+    min-height: calc(45px * var(--num-frets)); /* num-frets */
+    border-left: 2px solid black; /* borde izquierdo */
+    border-right: 2px solid black; /* borde derecho */
+    margin: 0 auto;
+  }
+  
+  .fret {
+    border: 1px solid var(--fretboard-border);
+    background-color: var(--fretboard-bg);
+    color: var(--fretboard-text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1em;
+  }
+  
+  .open-string {
+    background-color: var(--open-string-bg);
+    border-bottom: 2px solid var(--text-color);
+    color: var(--open-string-text);
+  }
 
+  .fret[data-fret="3"],
+  .fret[data-fret="5"],
+  .fret[data-fret="7"],
+  .fret[data-fret="9"],
+  .fret[data-fret="12"] {
+    background-color: var(--fret-marker-bg);
+  }
+  
+  .fret.selected {
+    background-color: var(--selected-bg);
+    color: var(--selected-text);
+    font-weight: bold; /* resalta la nota seleccionada */
+  }
+  
+  .fret.muted {
+    background-color: var(--muted-bg) !important;
+    color: var(--muted-text) !important;
+  }
 
-.fretboard {
-  display: grid;
-  grid-template-columns: repeat(var(--num-strings), 1fr); /* num-strings */
-  grid-template-rows: repeat(var(--num-frets), 1fr); /* num-frets */
-  width: 100%;
-  max-width: calc(45px * var(--num-strings)); /* num-strings */
-  max-height: 90vh;
-  min-height: calc(45px * var(--num-frets)); /* num-frets */
-  border-left: 2px solid black; /* borde izquierdo */
-  border-right: 2px solid black; /* borde derecho */
-  margin: 0 auto;
-}
+  .fret.muted.selected {
+    background-color: var(--muted-selected-bg);
+    opacity: 0.5;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: auto;
+  }
+  
+  td {
+    border: 1px solid var(--table-border);
+    padding: 2px;
+    text-align: center;
+    font-size: 0.9em;
+  }
 
-.fret {
-  border: 1px solid #bbbbbb;
-  background-color: #ffffff;
-  color: #bbbbbb;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  text-align: center;
-  font-size: 1em;
-}
-
-.open-string {
-  background-color: #dddddd;
-  border-bottom: 2px solid black;
-  color: #999999;
-}
-
-.fret[data-fret="3"],
-.fret[data-fret="5"],
-.fret[data-fret="7"],
-.fret[data-fret="9"],
-.fret[data-fret="12"] {
-  background-color: #f6f6f6;
-}
-
-.fret.selected {
-  background-color: #aaccee;
-  color: #000000;
-  font-weight: bold; /* resalta la nota seleccionada */
-}
-
-.fret.muted {
-  background-color: #ccc !important;
-  color: #aaa !important;
-}
-
-.fret.muted.selected {
-  background-color: #ddd;
-  opacity: 0.5;
-}
-
-table {
-  border-collapse: collapse;
-  width: auto;
-}
-
-td {
-  border: 1px solid black;
-  padding: 2px;
-  text-align: center;
-  font-size: 0.9em;
-}
-
-.clicable {
-  cursor: pointer;
-}
-
-#instrumento {
-  font-size: 1.2em;
-  width: 100%;
-  text-align: center;
-}
-#acorde {
-  font-size: 2.5em;
-  text-align: center;
-}
-
-/* Config Icon */
-.modal-config-icon {
-  position: fixed;
-  height: 20pt;
-  width: 20pt;
-  line-height: 100%;
-  top: 26px;
-  left: 4px;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 1000;
-  font-size: 20pt;
-  display: grid;
-  text-align: center;
-}
-.modal-config-icon:hover {
-  font-weight: bold;
-}
-
-/* Info Icon */
-.modal-info-icon {
-  position: fixed;
-  height: 12pt;
-  width: 12pt;
-  line-height: 100%;
-  top: 30px;
-  right: 18px;
-  background-color: aquamarine;
-  border: 1px solid #444;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 1000;
-  font-size: 12pt;
-  display: grid;
-  text-align: center;
-}
-
-.modal-info-icon:hover {
-  background-color: aqua;
-}
-
-/* extradata */
-.extradata-icon {
-  height: 12pt;
-  width: 12pt;
-  line-height: 100%;
-  top: 30px;
-  right: 48px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 12pt;
-  display: inline-block;
-  text-align: center;
-}
-.hidden {
-  display: none;
-}
-
-/* Modal */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1000; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-  align-items: center;
-}
-
-/* Modal Content */
-.modal-content {
-  margin: auto;
-  min-width: 320px;
-  height: 70vh;
-  width: 100%;
-  max-width: 480px;
-  background-color: #fefefe;
-}
-
-.modal-title {
-  background-color: #f1f1f1;
-  padding: 10px;
-  text-align: center;
-  font-size: 1.2em;
-  position: relative;
-}
-.modal-table {
-  margin: auto;
-  min-width: 320px;
-  height: 70vh;
-  width: 100%;
-  max-width: 480px;
-  background-color: #fff;
-}
-
-.blanco {
-  background-color: #fff;
-}
-
-.padding-20 {
-  padding: 20px;
-}
-
-/* Close Button */
-.close {
-  color: #aaa;
-  /* float: right; */
-  font-size: 28px;
-  font-weight: bold;
-  position: absolute;
-  top: 0;
-  right: 10px;
-}
-
-
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-/* Piano Styles */
+  .clicable {
+    cursor: pointer;
+  }
+  
+  #instrumento {
+    font-size: 1.2em;
+    width: 100%;
+    text-align: center;
+  }
+  #acorde {
+    font-size: 2.5em;
+    text-align: center;
+  }
+  
+  /* Config Icon */
+  .modal-config-icon {
+    position: fixed;
+    height: 20pt;
+    width: 20pt;
+    line-height: 100%;
+    top: 26px;
+    left: 4px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
+    font-size: 20pt;
+    display: grid;
+    text-align: center;
+  }
+  .modal-config-icon:hover {
+    font-weight: bold;
+  }
+  
+  /* Info Icon */
+  .modal-info-icon {
+    position: fixed;
+    height: 12pt;
+    width: 12pt;
+    line-height: 100%;
+    top: 30px;
+    right: 18px;
+    background-color: var(--info-icon-bg);
+    border: 1px solid var(--info-icon-border);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
+    font-size: 12pt;
+    display: grid;
+    text-align: center;
+  }
+  
+  .modal-info-icon:hover {
+    background-color: var(--info-icon-hover-bg);
+  }
+  
+  /* extradata */
+  .extradata-icon {
+    height: 12pt;
+    width: 12pt;
+    line-height: 100%;
+    top: 30px;
+    right: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12pt;
+    display: inline-block;
+    text-align: center;
+  }
+  .hidden {
+    display: none;
+  }
+  
+  /* Modal */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    align-items: center;
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    margin: auto;
+    min-width: 320px;
+    height: 70vh;
+    width: 100%;
+    max-width: 480px;
+    background-color: var(--modal-bg);
+  }
+  
+  .modal-title {
+    background-color: var(--modal-title-bg);
+    padding: 10px;
+    text-align: center;
+    font-size: 1.2em;
+    position: relative;
+  }
+  .modal-table {
+    margin: auto;
+    min-width: 320px;
+    height: 70vh;
+    width: 100%;
+    max-width: 480px;
+    background-color: var(--input-bg);
+  }
+  
+  .blanco {
+    background-color: var(--input-bg);
+  }
+  
+  .padding-20 {
+    padding: 20px;
+  }
+  
+  /* Close Button */
+  .close {
+    color: #aaa;
+    /* float: right; */
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    right: 10px;
+  }
+  
+  
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  
+  /* Piano Styles */
 .piano-holder * {
   display: block;
 }
@@ -309,94 +372,182 @@ td {
   width: 100%;
 }
 
-.piano {
-  display: flex;
-  border: 1px solid #000;
-  border-radius: 0 0 5px 5px;
-  box-shadow: 2px 2px 8px #ccc;
-}
+  .piano {
+    display: flex;
+    border: 1px solid #666;/* var(--piano-border); */
+    border-radius: 0 0 5px 5px;
+    box-shadow: 2px 2px 8px var(--piano-shadow);
+  }
+  
+  .key {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    padding-bottom: 10px;
+    cursor: pointer;
+    -webkit-user-select: none; /* Disable text selection for Safari */
+    user-select: none; /* Disable text selection */
+  }
+  
+  .white-key {
+    background-color: #fff;/* var(--piano-white-key); */
+    width: 30px;
+    border: 1px solid #666;/* var(--piano-border); */
+    border-bottom: none;
+    color: #000;
+  }
+  .white-key:first-child {
+    border-left: 1px solid #000;
+  }
+  .white-key:last-child {
+    border-right: 1px solid #000;
+  }
+  
+  
+  .black-key {
+    background-color: #000;/* var(--piano-black-key); */
+    width: 20px;
+    height: 60px;
+    margin-left: -10px;
+    margin-right: -10px;
+    z-index: 1; /* Ensure black keys are on top */
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+    color: #fff;
+  }
 
-.key {
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: end;
-  padding-bottom: 10px;
-  cursor: pointer;
-  -webkit-user-select: none; /* Disable text selection for Safari */
-  user-select: none; /* Disable text selection */
-}
-
-.white-key {
-  background-color: #fff;
-  width: 30px;
-  border: 1px solid #000;
-  border-bottom: none;
-}
-.white-key:first-child {
-  border-left: 1px solid #000;
-}
-.white-key:last-child {
-  border-right: 1px solid #000;
-}
-
-
-.black-key {
-  background-color: #000;
-  width: 20px;
-  height: 60px;
-  margin-left: -10px;
-  margin-right: -10px;
-  z-index: 1; /* Ensure black keys are on top */
-  box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
-}
-
-.key.active {
-  background-color: #aaccee; /* Light blue, active key */
-  color: #000;
-  box-shadow: 1px 1px 5px rgba(0,0,0,1);
-}
-
-.white-key.active {
-  color: #000;
-}
-
-#pisadimg {
-  margin: 0 auto;
-}
-
-
-.config-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.config-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-}
-
-.config-label {
-  width: 70%;
-  font-size: 0.9em;
-  background-color: #f8f8f8;
-}
-
-.config-input {
-  width: 30%;
-  text-align: center;
-}
-
-.config-input input[type="number"] {
-  width: 60px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  text-align: center;
-}
-
-.config-input input[type="number"]:focus {
-  outline: none;
-  border-color: #aaccee;
-  box-shadow: 0 0 5px rgba(170, 204, 238, 0.5);
-}
+  .key:hover {
+    filter: brightness(0.8);
+  }
+  .white-key:hover {
+    background-color: rgb(230, 230, 230);
+  }
+  .black-key:hover {
+    background-color: rgb(40, 40, 40);
+  }
+  .white-key.active {
+    background-color: rgb(143, 173, 202);/* var(--piano-white-key); */
+  }
+  .black-key.active {
+    background-color: rgb(33, 60, 82);/* var(--piano-white-key); */
+  }
+  .key.active {
+    /* Light blue, active key */
+    /* background-color: #aaccee; */
+    /* color: #000; */
+    box-shadow: 1px 1px 5px rgba(0,0,0,1);
+  }
+  
+  .key.highlighted {
+    box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.7) inset;
+  }
+  
+  /* .white-key.highlighted {
+    background-color: rgb(255, 245, 200);
+  } */
+  
+  /* .black-key.highlighted {
+    background-color: rgb(80, 70, 20);
+  } */
+  
+  /* Estilo para trastes iluminados */
+  .fret.highlighted {
+    box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.7) inset;
+    /* background-color: rgba(255, 215, 0, 0.3); Amarillo semi-transparente */
+    transition: background-color 0.2s ease;
+  }
+  
+  /* La clase highlighted no debe afectar a los trastes seleccionados */
+  .fret.selected.highlighted {
+    background-color: var(--selected-bg);
+  }
+  
+  .white-key.active {
+    color: #000;
+  }
+  
+  #pisadimg {
+    margin: 0 auto;
+  }
+  
+  
+  .config-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .config-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .config-label {
+    width: 70%;
+    font-size: 0.9em;
+    background-color: var(--config-label-bg);
+  }
+  
+  .config-input {
+    width: 30%;
+    text-align: center;
+  }
+  
+  .config-input input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  .config-input input[type="number"]:focus {
+    outline: none;
+    border-color: #aaccee;
+    box-shadow: 0 0 5px rgba(170, 204, 238, 0.5);
+  }
+  
+  /* Dark mode toggle switch styles */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #2a5d8a;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
