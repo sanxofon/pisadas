@@ -143,16 +143,19 @@ body {
   /* Pantalla Vertical */
   @media (max-aspect-ratio: 1/1) { 
     .chord-info {
-      height: 40vh;
+      height: 57vh;
       overflow: auto;
     }
     .fretboard-container {
-      max-height: 360px;
+      height: 40vh;
       height: auto;
       overflow: auto;
     }
     .piano-container {
       height: 25vh;
+    }
+    #instrumento {
+      max-height: 3vh;
     }
   }
   
