@@ -59,6 +59,11 @@
       </div>
     </div>
     <div class="chord-info">
+      <!-- Text Input for Tablature -->
+    <div class="tablature-input-container centrar">
+      TAB: <input type="text" id="tablature-input" placeholder="Tablatura: x 0 2 2 2 0" value="x 0 2 2 2 0">
+      <button onclick="setTablature()" class="favorites-btn" title="Cargar tablatura"><img src="./ok.png" class="favorites-img"></button>
+    </div>
       <div class="centrar">
         <div id="acorde"></div>
         <input type="hidden" id="acorderedux">
@@ -85,11 +90,6 @@
         <div>Notas: <span id="notas"></span></div>
         <div>Únicas: <span id="unicas"></span></div>
         <div>Conteo: <span id="conteo"></span></div>
-      </div>
-        <!-- Text Input for Tablature -->
-      <div class="tablature-input-container centrar">
-        <input type="text" id="tablature-input" placeholder="Tablatura: x 0 2 2 2 0" value="x 0 2 2 2 0">
-        <button onclick="setTablature()" class="favorites-btn" title="Cargar tablatura"><img src="./ok.png" class="favorites-img"></button>
       </div>
 
       <!-- Piano Keyboard -->

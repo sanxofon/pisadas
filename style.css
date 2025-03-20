@@ -253,18 +253,7 @@ body {
   }
   
   /* extradata */
-  .extradata-icon {
-    height: 12pt;
-    width: 12pt;
-    line-height: 100%;
-    top: 30px;
-    right: 48px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 12pt;
-    display: inline-block;
-    text-align: center;
-  }
+  
   .extradata-icon img {
     height: 11pt;
     width: 11pt;

@@ -1279,10 +1279,33 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js')
     .then((registration) => {
       if (verbose) console.log('Service Worker registered: ', registration);
+      
+      // Check for updates on page load
+      registration.addEventListener('updatefound', () => {
+        const newWorker = registration.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // New version available
+            if (confirm('¡Nueva versión disponible! ¿Desea actualizar ahora?')) {
+              window.location.reload();
+            }
+          }
+        });
+      });
+      
+      // Check for updates periodically
+      setInterval(() => {
+        registration.update();
+      }, 60 * 60 * 1000); // Check every hour
     })
     .catch((error) => {
       if (verbose) console.log('Service Worker registration failed: ', error);
     });
+  });
+  
+  // Listen for controller change to reload the page
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
   });
 }
 let iniciado = false;
