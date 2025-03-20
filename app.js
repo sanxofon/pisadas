@@ -470,7 +470,7 @@ function updateChordInfo(setonica='') {
       acordeNotas.push(getNota[i][selectedFrets[i]]);
     }
   }
-  if (acordeNotas.length === 0) {
+  if (acordeNotas.length <= 1) {
     vaciarUI()
     saveChordBtn.disabled = true; // Disable save button when no chord is selected
     return;
@@ -746,7 +746,7 @@ function intepretarIntervalo(intervals) {
   // Check for known chords, prioritizing longer matches
   for (let i = il; i >= 2; i--) {
     const chordKey = intervals.slice(0, i).join(' ');
-    if (acordesConocidos[chordKey][0]) {
+    if (acordesConocidos[chordKey] && acordesConocidos[chordKey][0]) {
       let suffix = '';
       if (i < il) {
         for (let j = i; j < il; j++) {
