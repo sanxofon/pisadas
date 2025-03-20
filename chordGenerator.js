@@ -72,6 +72,13 @@ const chordGenerator = (function() {
         
         // Convert to positions format (ensure correct number of positions)
         const numStrings = options.numStrings || 6;
+        
+        if (verbose) {
+            console.log("createChordFromTablature debug:");
+            console.log("- Raw tab:", tab);
+            console.log("- numStrings:", numStrings);
+        }
+        
         let positions = tab
             .map(fret => fret === 'x' || fret === 'X' ? 'X' : fret)
             .concat(Array(numStrings).fill('X'))
@@ -81,13 +88,18 @@ const chordGenerator = (function() {
         // Use provided fingering or generate default
         let fingers;
         if (options.fingering) {
-            if (verbose) console.log("Fingering: " + options.fingering)
+            if (verbose) console.log("Fingering: " + options.fingering);
             fingers = options.fingering
                 .replace(/[^0-9-]/g, '-')
                 .padEnd(numStrings, '-')
                 .slice(0, numStrings);
         } else {
             fingers = Array(numStrings).fill('-').join('');
+        }
+        
+        if (verbose) {
+            console.log("- Processed positions:", positions);
+            console.log("- Processed fingers:", fingers);
         }
         
         // Create the chord with the processed data
@@ -98,7 +110,8 @@ const chordGenerator = (function() {
             size: options.size || 4,
             containerId: options.containerId,
             layout: options.layout || "1",
-            stringNames: options.stringNames
+            stringNames: options.stringNames,
+            numStrings: numStrings
         });
     }
     

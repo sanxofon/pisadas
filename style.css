@@ -88,6 +88,13 @@ body {
     background-color: var(--h2-bg);
     margin: 0;
   }
+
+  .small {
+    font-size: 0.8em;
+  }
+  .big {
+    font-size: 1.2em;
+  }
   
   td, input, select, option {
     background-color: var(--input-bg);
@@ -140,7 +147,7 @@ body {
       overflow: auto;
     }
     .fretboard-container {
-      max-height: 380px;
+      max-height: 360px;
       height: auto;
       overflow: auto;
     }
@@ -331,6 +338,20 @@ body {
     cursor: pointer;
   }
   
+  .verticalText {
+    /* writing-mode: vertical-lr;
+    text-orientation: upright; */
+    writing-mode: tb-rl;
+    color: #999;
+  }
+  /* .verticalText img {
+    rotate: 90deg;
+  } */
+
+  .cols2 {
+    display: grid;
+    grid-template-columns: 90% 10%;
+  }
   
   /* Piano Styles */
 .piano-holder * {
@@ -340,7 +361,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  /* padding: 10px; */
   box-sizing: border-box;
   /* overflow: auto; */
   width: 100%;
@@ -440,10 +461,6 @@ body {
     color: #000;
   }
   
-  #pisadimg {
-    margin: 0 auto;
-  }
-  
   
   .config-table {
     width: 100%;
@@ -468,13 +485,21 @@ body {
   
   .config-input input[type="number"] {
     width: 60px;
+  }
+  .config-input select {
+    width: 100px;
+  }
+
+  .config-input input[type="number"],
+  .config-input select {
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
     text-align: center;
   }
   
-  .config-input input[type="number"]:focus {
+  .config-input input[type="number"]:focus,
+  .config-input select:focus {
     outline: none;
     border-color: #aaccee;
     box-shadow: 0 0 5px rgba(170, 204, 238, 0.5);
@@ -484,8 +509,8 @@ body {
   .switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 34px;
+    width: 54px;
+    height: 28px;
   }
   
   .switch input {
@@ -503,14 +528,14 @@ body {
     bottom: 0;
     background-color: #ccc;
     transition: .4s;
-    border-radius: 34px;
+    border-radius: 24px;
   }
   
-  .slider:before {
+  .slider::before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
+    height: 20px;
+    width: 20px;
     left: 4px;
     bottom: 4px;
     background-color: white;
@@ -564,6 +589,22 @@ body {
 .favorites-img.chica {
   width: 14pt;
   height: 14pt;
+}
+
+.text-btn {
+  color: #999;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0px 4px 1px 4px;
+  border-radius: 4px;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid transparent;
+}
+.text-btn:hover {
+  border: 1px solid #999;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 .favorites-btn {

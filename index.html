@@ -72,20 +72,8 @@
         <input type="hidden" id="acorderedux">
         <div id="interpretaciones"></div>
       </div>
-      <div class="centrar">
-        La Tónica es 
-        <select title="Seleccionar la tónica por..." id="selTonicDef">
-          <option value="0">El acorde más probable</option>
-          <option value="1">La nota más grave</option>
-          <option value="2">La nota más común</option>
-          <option value="3">La cuerda superior</option>
-        </select>
-        <button onclick="toggleExtraData()" class="favorites-btn" title="Expandir info"><img src="./plus.png" class="favorites-img"></button>
-      </div>
-      <div class="centrar">
-        <div id="acorde"></div>
-        <input type="hidden" id="acorderedux">
-        <div id="interpretaciones"></div>
+      <div class="centrar small">
+        <button onclick="toggleExtraData()" class="text-btn" title="Expandir info">ver detalles</button>
       </div>
       <div class="centrar hidden" id="extradata">
         <div>Tónica: <b id="tonica"></b></div>
@@ -102,17 +90,23 @@
         </div>
       </div>
 
-      <div class="centrar">
-        Guardar imagen: <button onclick="saveChordImage()" class="favorites-btn" title="Guardar imagen"><img src="./save.png" class="favorites-img chica"></button>
+      <div class="centrar cols2">
+        <!-- Image of the chord -->
+        <div id="pisadimg"></div>
+        <div class="verticalText">
+          <button onclick="saveChordImage()" class="favorites-btn" title="Descargar imagen"><img src="./download.png" class="favorites-img chica"></button>
+          &larr; DESCARGAR IMG 
+        </div>
       </div>
-      <!-- Image of the chord -->
-      <div id="pisadimg"></div>
 
     </div>
   </div>
   <!-- Info Icon -->
   <div class="top-right-icons">
-    <button id="saveChordBtn" class="favorites-btn" title="Guardar Acorde"><img src="./save.png" class="favorites-img"></button>
+    <div class="verticalText">
+      <button id="saveChordBtn" class="favorites-btn" title="Guardar Acorde"><img src="./save.png" class="favorites-img"></button>
+      &larr; GUARDAR ACORDE 
+    </div>
   </div>
   <div class="top-icons">
     <button onclick="openModalConfig()" class="favorites-btn" title="Configuraciones"><img src="./config.png" class="favorites-img"></button>
@@ -129,7 +123,18 @@
         <tr>
           <td class="config-label">Número de trastes en la interfaz</td>
           <td class="config-input">
-            <input type="number" id="numFrets" min="8" max="13" value="13">
+            <input type="number" id="numFrets" value="13">
+          </td>
+        </tr>
+        <tr>
+          <td class="config-label">Seleccionar la tónica por</td>
+          <td class="config-input">
+            <select class="small" title="Seleccionar la tónica por..." id="selTonicDef">
+              <option value="0">Más probable</option>
+              <option value="1">Nota más grave</option>
+              <option value="2">Nota más común</option>
+              <option value="3">Cuerda superior</option>
+            </select>
           </td>
         </tr>
         <tr>
@@ -160,6 +165,12 @@
               <!-- Favorites will be populated here -->
               <div class="no-favorites">No hay acordes guardados</div>
             </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="config-label">Generar hoja de acordes</td>
+          <td class="config-input">
+            <button id="generateFavSheetBtn" class="favorites-btn" title="Generar planilla de acordes"><img src="./sheet.png" class="favorites-img"></button>
           </td>
         </tr>
       </table>

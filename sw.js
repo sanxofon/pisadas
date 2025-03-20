@@ -1,7 +1,7 @@
-const CACHE_NAME = 'pisadas-guitarra-cache-v1.5.3';
-const APP_VERSION = '1.5.3'; // Update this when releasing a new version
+const CACHE_NAME = 'pisadas-guitarra-cache-v1.6';
+const APP_VERSION = '1.6'; // Update this when releasing a new version
 const urlsToCache = [
-  '/pisadas/',                     // Ruta base de tu proyecto en GitHub Pages
+  '/pisadas/',                     // Ruta base del proyecto en GitHub Pages
   '/pisadas/index.html',            // Rutas relativas a la base
   '/pisadas/notacion.html',            // Rutas relativas a la base
   '/pisadas/style.css',
@@ -11,12 +11,13 @@ const urlsToCache = [
   '/pisadas/acordesConocidos.js',
   '/pisadas/acordesPosibles.js',    // Añadido archivo faltante
   '/pisadas/manifest.webmanifest',
-  '/pisadas/README.md',             // Corregido a mayúsculas como en el sistema de archivos
+  '/pisadas/README.md',
   '/pisadas/sw.js',                 // Incluir el propio service worker
+  '/pisadas/instrumentos.js',       // Archivo de instrumentos
   
   // Imágenes
   '/pisadas/desconocida.png',  
-  '/pisadas/icon-48.png',          // Asegúrate de incluir todos tus iconos
+  '/pisadas/icon-48.png',          // incluir todos los iconos
   '/pisadas/icon-96.png',
   '/pisadas/icon-192.png',
   '/pisadas/icon-512.png',
@@ -30,7 +31,9 @@ const urlsToCache = [
   '/pisadas/ok.png',
   '/pisadas/plus.png',
   '/pisadas/save.png',
-  '/pisadas/send.png'
+  '/pisadas/send.png',
+  '/pisadas/download.png',         // Nueva imagen para descargar
+  '/pisadas/sheet.png'             // Nueva imagen para planilla de acordes
 ];
 
 self.addEventListener('install', (event) => {
