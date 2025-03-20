@@ -15,7 +15,17 @@ const urlsToCache = [
   '/pisadas/icon-96.png',
   '/pisadas/icon-192.png',
   '/pisadas/icon-512.png',
-  '/pisadas/share.jpg'             // Otros recursos
+  '/pisadas/share.jpg',
+  '/pisadas/trash.png',
+  '/pisadas/config.png',
+  '/pisadas/export.png',
+  '/pisadas/idea.png',
+  '/pisadas/import.png',
+  '/pisadas/info.png',
+  '/pisadas/ok.png',
+  '/pisadas/plus.png',
+  '/pisadas/save.png',
+  '/pisadas/send.png'
 ];
 
 self.addEventListener('install', (event) => {

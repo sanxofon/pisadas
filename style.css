@@ -6,7 +6,7 @@
   --background-color: #eee;
   --text-color: #000;
   --fretboard-bg: #ffffff;
-  --fretboard-text: #bbbbbb;
+  --fretboard-text: #888;
   --fretboard-border: #bbbbbb;
   --open-string-bg: #dddddd;
   --open-string-text: #999999;
@@ -36,7 +36,7 @@
   --background-color: #222;
   --text-color: #eee;
   --fretboard-bg: #333;
-  --fretboard-text: #999;
+  --fretboard-text: #bbb;
   --fretboard-border: #555;
   --open-string-bg: #444;
   --open-string-text: #aaa;
@@ -106,6 +106,7 @@ body {
   }
   
   .chord-info {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -230,41 +231,21 @@ body {
     text-align: center;
   }
   
-  /* Config Icon */
-  .modal-config-icon {
-    position: fixed;
-    height: 20pt;
-    width: 20pt;
-    line-height: 100%;
-    top: 26px;
+
+  .top-icons, .top-right-icons {
+    position: absolute;
+    top: 32px;
     left: 4px;
-    border-radius: 50%;
-    cursor: pointer;
     z-index: 1000;
-    font-size: 20pt;
     display: grid;
+    columns: 1fr;
+    row-gap: 5px;
     text-align: center;
   }
-  .modal-config-icon:hover {
-    font-weight: bold;
-  }
-  
-  /* Info Icon */
-  .modal-info-icon {
-    position: fixed;
-    height: 12pt;
-    width: 12pt;
-    line-height: 100%;
-    top: 30px;
-    right: 18px;
-    background-color: var(--info-icon-bg);
-    border: 1px solid var(--info-icon-border);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 1000;
-    font-size: 12pt;
-    display: grid;
-    text-align: center;
+
+  .top-right-icons {
+    left: auto;
+    right: 4px;
   }
   
   .modal-info-icon:hover {
@@ -283,6 +264,10 @@ body {
     font-size: 12pt;
     display: inline-block;
     text-align: center;
+  }
+  .extradata-icon img {
+    height: 11pt;
+    width: 11pt;
   }
   .hidden {
     display: none;
@@ -551,3 +536,179 @@ body {
   input:checked + .slider:before {
     transform: translateX(26px);
   }
+
+  /* Save chord button */
+.save-chord-btn {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background-color: var(--selected-bg);
+  color: var(--selected-text);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s;
+}
+
+.save-chord-btn:hover {
+  background-color: #8ab8e0;
+}
+
+.save-chord-btn:disabled {
+  background-color: var(--muted-bg);
+  color: var(--muted-text);
+  cursor: not-allowed;
+}
+
+/* Favorites section */
+.favorites-header {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.4em;
+}
+
+.favorites-img {
+  width: 18pt;
+  height: 18pt;
+}
+
+.favorites-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 24pt;
+  height: 24pt;
+  border-radius: 6px;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid transparent;
+}
+.favorites-btn:hover {
+  border: 1px solid #999;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.favorite-actions .favorites-btn {
+  width: 20pt;
+  height: 20pt;
+}
+.favorite-actions .favorites-img {
+  width: 14pt;
+  height: 14pt;
+}
+.dark-mode .favorites-img {
+  filter: invert(100%);
+}
+
+.favorites-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--fretboard-border);
+  border-radius: 4px;
+  padding: 5px;
+  background-color: var(--fretboard-bg);
+}
+
+.favorite-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid var(--fretboard-border);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.favorite-item:last-child {
+  border-bottom: none;
+}
+
+.favorite-item:hover {
+  background-color: var(--open-string-bg);
+}
+
+.favorite-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.favorite-name {
+  font-weight: bold;
+}
+
+.favorite-details {
+  font-size: 0.8em;
+  color: var(--fretboard-text);
+}
+
+.favorite-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.no-favorites {
+  padding: 10px;
+  text-align: center;
+  color: var(--fretboard-text);
+  font-style: italic;
+}
+
+/* Flash animation for config icon */
+@keyframes flash {
+  0%, 100% { 
+    opacity: 1;
+    color: var(--text-color);
+  }
+  50% { 
+    opacity: 0.8;
+    color: #ffcc00; /* Yellowish color */
+    text-shadow: 0 0 8px #ffcc00; /* Glow effect */
+    transform: scale(1.1); /* Slight size increase */
+  }
+}
+
+.flash-icon {
+  animation: flash 0.5s ease-in-out 6 alternate;
+}
+
+.export-modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+}
+
+.export-modal h3 {
+  margin-top: 0;
+}
+
+.export-options {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.export-modal textarea {
+  width: 96%;
+  height: 200px;
+  margin-bottom: 15px;
+  font-family: monospace;
+  padding: 10px;
+}
+
+.export-modal button {
+  cursor: pointer;
+  padding: 8px 16px;
+}
+
+.dark-mode .export-modal {
+  background-color: #333;
+  color: #fff;
+}
+
+.dark-mode .export-modal textarea {
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #555;
+}

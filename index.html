@@ -8,7 +8,7 @@
   <meta name="image" content="https://sanxofon.github.io/pisadas/share.jpg">
   <meta name="author" content="Santiago Chávez Novaro">
   <link rel="manifest" href="https://sanxofon.github.io/pisadas/manifest.webmanifest">
-  <title>Pisadas v1.3</title>
+  <title>Pisadas v1.5</title>
   <meta name="theme-color" content="#eeeeee" />
   <!-- Allow web app to be run in full-screen mode. -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -72,7 +72,12 @@
           <option value="2">La nota más común</option>
           <option value="3">La cuerda superior</option>
         </select>
-        <div class="extradata-icon" onclick="toggleExtraData()">&#128161;</div>
+        <button onclick="toggleExtraData()" class="favorites-btn" title="Expandir info"><img src="./plus.png" class="favorites-img"></button>
+      </div>
+      <div class="centrar">
+        <div id="acorde"></div>
+        <input type="hidden" id="acorderedux">
+        <div id="interpretaciones"></div>
       </div>
       <div class="centrar hidden" id="extradata">
         <div>Tónica: <b id="tonica"></b></div>
@@ -81,10 +86,10 @@
         <div>Únicas: <span id="unicas"></span></div>
         <div>Conteo: <span id="conteo"></span></div>
       </div>
-      <!-- Text Input for Tablature -->
+        <!-- Text Input for Tablature -->
       <div class="tablature-input-container centrar">
         <input type="text" id="tablature-input" placeholder="Tablatura: x 0 2 2 2 0" value="x 0 2 2 2 0">
-        <button onclick="setTablature()">OK</button>
+        <button onclick="setTablature()" class="favorites-btn" title="Cargar tablatura"><img src="./ok.png" class="favorites-img"></button>
       </div>
 
       <!-- Piano Keyboard -->
@@ -100,35 +105,61 @@
     </div>
   </div>
   <!-- Info Icon -->
-  <div class="modal-info-icon" onclick="openModal()">i</div>
-  <div class="modal-config-icon" onclick="openModalConfig()">&#9881;</div>
-  
-  <!-- Modal-config -->
-  <div id="config-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-title">Configuración <span class="close" onclick="closeModal()">×</span></div>
-      <hr>
-      <div class="modal-table">
-        <table class="config-table">
-          <tr>
-            <td class="config-label">Número de trastes en la interfaz</td>
-            <td class="config-input">
-              <input type="number" id="numFrets" min="8" max="13" value="13">
-            </td>
-          </tr>
-          <tr>
-            <td class="config-label">Modo oscuro</td>
-            <td class="config-input">
-              <label class="switch">
-                <input type="checkbox" id="darkModeToggle">
-                <span class="slider"></span>
-              </label>
-            </td>
-          </tr>
-        </table>
-      </div>
+  <div class="top-right-icons">
+    <button id="saveChordBtn" class="favorites-btn" title="Guardar Acorde"><img src="./save.png" class="favorites-img"></button>
+  </div>
+  <div class="top-icons">
+    <button onclick="openModalConfig()" class="favorites-btn" title="Configuraciones"><img src="./config.png" class="favorites-img"></button>
+    <button onclick="openModal()" class="favorites-btn" title="Notación utilizada"><img src="./info.png" class="favorites-img"></button>
+  </div>
+
+<!-- Modal-config -->
+<div id="config-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-title">Configuración <span class="close" onclick="closeModal()">×</span></div>
+    <hr>
+    <div class="modal-table">
+      <table class="config-table">
+        <tr>
+          <td class="config-label">Número de trastes en la interfaz</td>
+          <td class="config-input">
+            <input type="number" id="numFrets" min="8" max="13" value="13">
+          </td>
+        </tr>
+        <tr>
+          <td class="config-label">Modo oscuro</td>
+          <td class="config-input">
+            <label class="switch">
+              <input type="checkbox" id="darkModeToggle">
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        <!-- Add favorites section -->
+        <tr>
+          <td class="config-label">
+            <div class="favorites-header">
+              Acordes Favoritos
+            </div>
+          </td>
+          <td class="config-label">
+            <button id="importFavoritesBtn" class="favorites-btn" title="Importar JSON / Subir"><img src="./import.png" class="favorites-img"></button>
+            <button id="exportFavoritesBtn" class="favorites-btn" title="Exportar JSON / Descargar"><img src="./export.png" class="favorites-img"></button>
+            <button id="clearFavoritesBtn" class="favorites-btn" title="Borrar todos los favoritos"><img src="./trash.png" class="favorites-img"></button>
+          </td>
+        </tr>
+        <tr>
+          <td class="config-label" colspan="2">
+            <div id="favoritesList" class="favorites-list">
+              <!-- Favorites will be populated here -->
+              <div class="no-favorites">No hay acordes guardados</div>
+            </div>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
+</div>
   <!-- Modal -->
   <div id="notation-modal" class="modal">
     <div class="modal-content">

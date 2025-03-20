@@ -152,6 +152,14 @@ const STORAGE_KEY = 'lastFretPositions'; // memoria último acorde
 const FRETS_STORAGE_KEY = 'numFrets'; // memoria número de trastes
 const DARK_MODE_STORAGE_KEY = 'darkMode'; // Storage key for dark mode preference
 
+// Constants for favorites
+const FAVORITES_STORAGE_KEY = 'savedChords';
+const saveChordBtn = document.getElementById('saveChordBtn');
+const clearFavoritesBtn = document.getElementById('clearFavoritesBtn');
+const favoritesList = document.getElementById('favoritesList');
+const exportFavoritesBtn = document.getElementById('exportFavoritesBtn');
+const importFavoritesBtn = document.getElementById('importFavoritesBtn');
+
 const todas_las_notas = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 // Global de acordes conocidos
@@ -350,10 +358,26 @@ function setChordImage(chordName) {
     .map(fret => fret === -1 ? 'X' : fret)
     .join(' ');
   
+  // Get fingering pattern from chord if available, otherwise use default
+  let fingeringPattern = '-'.repeat(NUM_STRINGS);
+  
+  // Check if this chord exists in favorites to get its fingering
+  const favorites = loadFavorites();
+  const matchingChord = favorites.find(chord => 
+    chord.name === chordName && 
+    chord.instrumento === instrumento &&
+    JSON.stringify(chord.tablatura) === JSON.stringify(tablature)
+  );
+  
+  if (matchingChord && matchingChord.fingering) {
+    fingeringPattern = matchingChord.fingering;
+  }
+  
   if (verbose) {
     console.log('Chord Generation Debug:');
     console.log('- Chord Name:', chordName);
     console.log('- Tablature String:', tabString);
+    console.log('- Fingering Pattern:', fingeringPattern);
   }
 
   // Use createChordFromTablature like in the demo
@@ -361,6 +385,7 @@ function setChordImage(chordName) {
     chordGenerator.createChordFromTablature({
       name: chordName,
       tablature: tabString,
+      fingering: fingeringPattern,
       containerId: 'pisadimg',
       size: SIZE_CHORD_IMAGE,
       stringNames: tunningToStr(instrumentos[instrumento]['t']),
@@ -447,9 +472,13 @@ function updateChordInfo(setonica='') {
   }
   if (acordeNotas.length === 0) {
     vaciarUI()
+    saveChordBtn.disabled = true; // Disable save button when no chord is selected
     return;
   }
   if(REVERSA)acordeNotas.reverse(); // REVERSA
+  
+  // Enable save button when a chord is selected
+  saveChordBtn.disabled = false;
   
   notasInput.textContent = acordeNotas.join(", "); // Ahora muestra las notas con octavas
   let notasUnicasConteo = contarNotas(acordeNotas);
@@ -507,6 +536,7 @@ function vaciarUI() {
   acordeInput.textContent = "";
   acordeReduxInput.value = "";
   interpretaInput.textContent = "";
+  saveChordBtn.disabled = true; // Disable save button when UI is cleared
 }
 
 /* function updateStringMutingStyle() {
@@ -755,6 +785,326 @@ newOctave += Math.floor((noteIndex + fret) / NUMBER_OF_NOTES); // corrected octa
 return todas_las_notas[newNoteIndex] + newOctave;
 } */
 
+// Save chord to favorites
+function saveChordToFavorites() {
+  // Check if there's a chord to save
+  if (acordeReduxInput.value === "") {
+    alert("No hay acorde para guardar");
+    return;
+  }
+  
+  // Ask for fingering pattern
+  const defaultPattern = "-".repeat(NUM_STRINGS);
+  const fingeringPattern = prompt("Ingrese la cadena de digitación (dedos utilizados):", defaultPattern);
+  
+  // If user cancels, don't save
+  if (fingeringPattern === null) return;
+  
+  // Create chord object
+  const chord = {
+    id: Date.now().toString(), // Unique ID based on timestamp
+    name: acordeReduxInput.value,
+    displayName: acordeInput.innerHTML,
+    tonica: tonicaInput.textContent,
+    bajo: bajoInput.textContent,
+    instrumento: instrumento,
+    instrumentoNombre: instrumentos[instrumento].n,
+    tablatura: getTablature(),
+    fingering: fingeringPattern,
+    date: new Date().toISOString(),
+    notas: notasInput.textContent
+  };
+  
+  // Get existing favorites
+  let favorites = JSON.parse(localStorage.getItem(FAVORITES_STORAGE_KEY) || '[]');
+  
+  // Add new chord
+  favorites.push(chord);
+  
+  // Save to localStorage
+  localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
+  
+  // Update favorites list
+  updateFavoritesList();
+  
+  // Show confirmation
+  flashConfigIcon();
+  if (verbose) alert(`Acorde "${chord.name}" guardado correctamente`);
+}
+
+// Function to flash the config icon to guide users
+function flashConfigIcon() {
+  const configIcon = document.querySelector('.modal-config-icon');
+  if (!configIcon) return;
+  
+  // Add a flash class that we'll define in CSS
+  configIcon.classList.add('flash-icon');
+  
+  // Flash 3 times (6 transitions) over 3 seconds
+  setTimeout(() => {
+    configIcon.classList.remove('flash-icon');
+  }, 3000);
+}
+
+// Load favorites from localStorage
+function loadFavorites() {
+  return JSON.parse(localStorage.getItem(FAVORITES_STORAGE_KEY) || '[]');
+}
+
+// Update favorites list in the config modal
+function updateFavoritesList() {
+  const favorites = loadFavorites();
+  
+  // Clear current list
+  favoritesList.innerHTML = '';
+  
+  if (favorites.length === 0) {
+    favoritesList.innerHTML = '<div class="no-favorites">No hay acordes guardados</div>';
+    return;
+  }
+  
+  // Sort by date (newest first)
+  favorites.sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+  // Create list items
+  favorites.forEach(chord => {
+    const item = document.createElement('div');
+    item.className = 'favorite-item';
+    item.dataset.id = chord.id;
+    
+    const formattedDate = new Date(chord.date).toLocaleDateString();
+    
+    item.innerHTML = `
+      <div class="favorite-info">
+        <div class="favorite-name">${chord.name}</div>
+        <div class="favorite-details">
+          ${chord.instrumentoNombre} - ${formattedDate}
+        </div>
+      </div>
+      <div class="favorite-actions">
+        <button class="load-favorite favorites-btn" title="Cargar acorde"><img src="./send.png" class="favorites-img"></button>
+        <button class="delete-favorite favorites-btn" title="Eliminar"><img src="./trash.png" class="favorites-img"></button>
+      </div>
+    `;
+    
+    favoritesList.appendChild(item);
+    
+    // Add event listeners
+    item.querySelector('.load-favorite').addEventListener('click', () => loadFavoriteChord(chord.id));
+    item.querySelector('.delete-favorite').addEventListener('click', () => deleteFavoriteChord(chord.id));
+    
+    // Make the whole item clickable to load the chord
+    item.addEventListener('click', (e) => {
+      // Only trigger if not clicking on a button
+      if (!e.target.closest('button')) {
+        loadFavoriteChord(chord.id);
+      }
+    });
+  });
+}
+
+// Load a favorite chord
+function loadFavoriteChord(id) {
+  const favorites = loadFavorites();
+  const chord = favorites.find(c => c.id === id);
+  
+  if (!chord) {
+    alert("No se encontró el acorde");
+    return;
+  }
+  
+  // Set instrument if different
+  if (instrumento !== chord.instrumento) {
+    setInstrumento(chord.instrumento);
+  }
+  
+  // Set the chord
+  setAcorde([-1,-1,-1,-1,-1,-1]); // Clear the fretboard
+  setAcorde(chord.tablatura);
+  
+  // Store the fingering pattern for use in setChordImage
+  if (chord.fingering) {
+    // We don't need to store it separately as setChordImage will look it up
+    if (verbose) console.log(`Cargando digitación: ${chord.fingering}`);
+  }
+  
+  // Close the modal
+  closeModal();
+  
+  // Show confirmation
+  if (verbose) alert(`Acorde "${chord.name}" cargado correctamente`);
+}
+
+// Delete a favorite chord
+function deleteFavoriteChord(id) {
+  if (!confirm("¿Está seguro de eliminar este acorde?")) return;
+  
+  let favorites = loadFavorites();
+  favorites = favorites.filter(chord => chord.id !== id);
+  
+  localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
+  updateFavoritesList();
+}
+
+// Clear all favorites
+function clearAllFavorites() {
+  if (!confirm("¿Está seguro de eliminar TODOS los acordes guardados?")) return;
+  
+  localStorage.removeItem(FAVORITES_STORAGE_KEY);
+  updateFavoritesList();
+}
+// Importar acordes guardados como JSON
+function importFavorites() {
+  // Create a file input element
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.json';
+  
+  // Handle file selection
+  fileInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      try {
+        // Parse the JSON content
+        const importedChords = JSON.parse(event.target.result);
+        
+        // Get existing favorites
+        let currentFavorites = loadFavorites();
+        let addedCount = 0;
+        let updatedCount = 0;
+        
+        // Process each imported chord
+        importedChords.forEach(importedChord => {
+          // Check if this chord already exists
+          const existingIndex = currentFavorites.findIndex(existing => 
+            existing.instrumento === importedChord.instrumento &&
+            JSON.stringify(existing.tablatura) === JSON.stringify(importedChord.tablatura) &&
+            existing.name === importedChord.name
+          );
+          
+          if (existingIndex === -1) {
+            // Chord doesn't exist, add it with a new ID
+            importedChord.id = Date.now().toString() + Math.random().toString(36).substr(2, 5);
+            currentFavorites.push(importedChord);
+            addedCount++;
+          } else {
+            // Chord exists, check if we should update it (prefer one with fingering)
+            const existingChord = currentFavorites[existingIndex];
+            
+            if ((!existingChord.fingering || existingChord.fingering === '-'.repeat(NUM_STRINGS)) && 
+                importedChord.fingering && importedChord.fingering !== '-'.repeat(NUM_STRINGS)) {
+              // Keep the existing ID but update other properties
+              importedChord.id = existingChord.id;
+              currentFavorites[existingIndex] = importedChord;
+              updatedCount++;
+            }
+          }
+        });
+        
+        // Save the updated favorites
+        localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(currentFavorites));
+        
+        // Update the UI
+        updateFavoritesList();
+        
+        // Show results
+        alert(`Importación completada:\n- ${addedCount} acordes nuevos añadidos\n- ${updatedCount} acordes actualizados con digitación`);
+        
+      } catch (error) {
+        console.error('Error parsing JSON:', error);
+        alert('Error al importar: El archivo no contiene un formato JSON válido de acordes.');
+      }
+    };
+    
+    reader.onerror = function() {
+      alert('Error al leer el archivo.');
+    };
+    
+    reader.readAsText(file);
+  });
+  
+  // Trigger the file selection dialog
+  fileInput.click();
+}
+
+// Exportar acordes guardados como JSON
+function exportFavorites() {
+  const favorites = loadFavorites();
+  
+  if (favorites.length === 0) {
+    alert("No hay acordes guardados para exportar");
+    return;
+  }
+  
+  // Crear el contenido JSON formateado
+  const jsonContent = JSON.stringify(favorites, null, 2);
+  
+  // Crear modal para mostrar el JSON y opciones
+  const modalContent = document.createElement('div');
+  modalContent.className = 'export-modal';
+  modalContent.innerHTML = `
+    <h3>Exportar Acordes</h3>
+    <p>Tienes ${favorites.length} acordes guardados.</p>
+    <div class="export-options">
+      <button id="downloadJsonBtn">Descargar como JSON</button>
+      <button id="copyJsonBtn">Copiar al portapapeles</button>
+    </div>
+    <textarea id="jsonContent" readonly>${jsonContent}</textarea>
+    <button id="closeExportBtn">Cerrar</button>
+  `;
+  
+  // Crear el modal
+  const exportModal = document.createElement('div');
+  exportModal.className = 'modal';
+  exportModal.id = 'export-modal';
+  exportModal.appendChild(modalContent);
+  
+  // Agregar el modal al DOM
+  document.body.appendChild(exportModal);
+  
+  // Mostrar el modal
+  exportModal.style.display = 'grid';
+  
+  // Agregar event listeners
+  document.getElementById('downloadJsonBtn').addEventListener('click', () => {
+    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    // Format current date for filename
+    const now = new Date();
+    const dateStr = now.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD format
+    const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, ''); // HHMMSS format
+    
+    a.download = `mis_acordes-${dateStr}-${timeStr}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+  
+  document.getElementById('copyJsonBtn').addEventListener('click', () => {
+    const textarea = document.getElementById('jsonContent');
+    textarea.select();
+    document.execCommand('copy');
+    alert('Contenido copiado al portapapeles');
+  });
+  
+  document.getElementById('closeExportBtn').addEventListener('click', () => {
+    document.body.removeChild(exportModal);
+  });
+  
+  // Cerrar al hacer clic fuera del contenido
+  exportModal.addEventListener('click', (e) => {
+    if (e.target === exportModal) {
+      document.body.removeChild(exportModal);
+    }
+  });
+}
+
 const selTonica = document.getElementById('selTonicDef');
 selTonica.addEventListener('change', (event) => {
   let v = parseInt(event.target.value);
@@ -969,7 +1319,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     const numFrets = parseInt(savedFrets);
     if (numFrets >= 8 && numFrets <= 13) {
       NUM_FRETS = numFrets;
-      console.log('NUM_FRETS:', NUM_FRETS);
+      if (verbose) console.log('NUM_FRETS:', NUM_FRETS);
       document.getElementById('numFrets').value = NUM_FRETS;
       fretboard.style.setProperty('--num-frets', NUM_FRETS);
     }
@@ -979,6 +1329,28 @@ window.addEventListener('DOMContentLoaded', (event) => {
   if(searchParams.has('i')) {
     instrumento = parseInt(searchParams.get('i'));
   }
+  
+  // Add event listeners for favorites functionality
+  saveChordBtn.addEventListener('click', saveChordToFavorites);
+  clearFavoritesBtn.addEventListener('click', clearAllFavorites);
+
+  // Event listeners for favorites functionality
+  saveChordBtn.addEventListener('click', saveChordToFavorites);
+  clearFavoritesBtn.addEventListener('click', clearAllFavorites);
+  // Agregar event listener para exportar
+  if (exportFavoritesBtn) {
+    exportFavoritesBtn.addEventListener('click', exportFavorites);
+  }
+  // Agregar event listener para importar
+  if (importFavoritesBtn) {
+    importFavoritesBtn.addEventListener('click', importFavorites);
+  }
+  
+  // Initialize favorites list
+  updateFavoritesList();
+  // Disable save button initially
+  saveChordBtn.disabled = true;
+
   setInstrumento(instrumento);
   createPiano(); //Initialize the piano
   // Populate instruments select
