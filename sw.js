@@ -1,5 +1,5 @@
-const CACHE_NAME = 'pisadas-guitarra-cache-v1.5';
-const APP_VERSION = '1.5'; // Update this when releasing a new version
+const CACHE_NAME = 'pisadas-guitarra-cache-v1.5.3';
+const APP_VERSION = '1.5.3'; // Update this when releasing a new version
 const urlsToCache = [
   '/pisadas/',                     // Ruta base de tu proyecto en GitHub Pages
   '/pisadas/index.html',            // Rutas relativas a la base

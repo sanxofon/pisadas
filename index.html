@@ -49,6 +49,9 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="splashScreen" class="splash-screen">
+    <img src="share.jpg" alt="Welcome" class="splash-image">
+  </div>
   <select id="instrumento" onchange="cambiarInstrumento(this.value);" title="Selecciona un instrumento">
     <option value="-1"> - INSTRUMENTO - </option>
   </select>
@@ -99,6 +102,9 @@
         </div>
       </div>
 
+      <div class="centrar">
+        Guardar imagen: <button onclick="saveChordImage()" class="favorites-btn" title="Guardar imagen"><img src="./save.png" class="favorites-img chica"></button>
+      </div>
       <!-- Image of the chord -->
       <div id="pisadimg"></div>
 

@@ -274,21 +274,52 @@ function selectFret(event) {
   const cell = event.target;
   const stringIndex = parseInt(cell.dataset.string);
   const fretIndex = parseInt(cell.dataset.fret);
-  let cellIndex = fretIndex * NUM_STRINGS + stringIndex;
+  
+  // If the clicked cell is already selected, unselect it and mute the string
   if (cell.classList.contains('selected')) {
     cell.classList.remove('selected');
-    selectedFrets[stringIndex] = -1;
+    selectedFrets[stringIndex] = -1; // Mark string as muted
   } else {
+    // If another fret on this string was selected, unselect it
     const previouslySelectedFret = selectedFrets[stringIndex];
     if (previouslySelectedFret !== -1) {
-      let prevCellIndex = previouslySelectedFret * NUM_STRINGS + stringIndex;
-      fretboardCells[prevCellIndex].classList.remove('selected');
+      const prevCellIndex = previouslySelectedFret * NUM_STRINGS + stringIndex;
+      if (prevCellIndex < fretboardCells.length) {
+        fretboardCells[prevCellIndex].classList.remove('selected');
+      }
     }
+    // Select the new fret
     selectedFrets[stringIndex] = fretIndex;
     cell.classList.add('selected');
   }
+  
+  // Update the muting style for all strings
+  updateStringMutingStyle();
   updateChordInfo();
-  saveFretPositions(); // Memoria, guardar a LocalStorage
+  saveFretPositions(); // Save to localStorage
+}
+
+function updateStringMutingStyle() {
+  // For each string
+  for (let stringIndex = 0; stringIndex < NUM_STRINGS; stringIndex++) {
+    const isMuted = selectedFrets[stringIndex] === -1;
+    
+    // For each fret on this string
+    for (let fretIndex = 0; fretIndex < NUM_FRETS; fretIndex++) {
+      const cellIndex = fretIndex * NUM_STRINGS + stringIndex;
+      
+      if (cellIndex < fretboardCells.length) {
+        const cell = fretboardCells[cellIndex];
+        
+        // Apply or remove the muted class based on string state
+        if (isMuted) {
+          cell.classList.add('muted');
+        } else {
+          cell.classList.remove('muted');
+        }
+      }
+    }
+  }
 }
 
 function getTablature() {
@@ -540,33 +571,22 @@ function vaciarUI() {
 }
 
 /* function updateStringMutingStyle() {
-for (let stringIndex = 0; stringIndex < NUM_STRINGS; stringIndex++) {
-const isMuted = selectedFrets[stringIndex] < 0; // String is muted if no fret is selected
-for (let fretIndex = 0; fretIndex < NUM_FRETS; fretIndex++) {
-const cell = fretboardCells[fretIndex + stringIndex * NUM_FRETS];
-if (isMuted) {
-cell.classList.add('muted');
-} else {
-cell.classList.remove('muted');
-}
-}
-}
-} */
-function updateStringMutingStyle() {
   for (let stringIndex = 0; stringIndex < NUM_STRINGS; stringIndex++) {
     const isMuted = selectedFrets[stringIndex] < 0;
     for (let fretIndex = 0; fretIndex < NUM_FRETS; fretIndex++) {
+      // Calculate the correct index based on how cells are added in createFretboard
       const cellIndex = fretIndex * NUM_STRINGS + stringIndex;
-      const cell = fretboardCells[cellIndex];
-      if (isMuted) {
-        cell.classList.add('muted');
-        cell.classList.remove('selected');
-      } else {
-        cell.classList.remove('muted');
+      if (cellIndex < fretboardCells.length) {
+        const cell = fretboardCells[cellIndex];
+        if (isMuted) {
+          cell.classList.add('muted');
+        } else {
+          cell.classList.remove('muted');
+        }
       }
     }
   }
-}
+} */
 
 function acordeMasProbable(interpretaciones,tonica,bajo,reducido=false) {
   tonica = tonica.replace(/[0-9]/g, '');
@@ -882,8 +902,8 @@ function updateFavoritesList() {
         </div>
       </div>
       <div class="favorite-actions">
-        <button class="load-favorite favorites-btn" title="Cargar acorde"><img src="./send.png" class="favorites-img"></button>
-        <button class="delete-favorite favorites-btn" title="Eliminar"><img src="./trash.png" class="favorites-img"></button>
+        <button class="load-favorite favorites-btn" title="Cargar acorde"><img src="./send.png" class="favorites-img chica"></button>
+        <button class="delete-favorite favorites-btn" title="Eliminar"><img src="./trash.png" class="favorites-img chica"></button>
       </div>
     `;
     
@@ -1261,6 +1281,31 @@ function updatePianoKeys(acordeNotas, tonica) {
   });
 }
 
+function saveChordImage() {
+  const chordName = document.getElementById('acorde').textContent;
+  const pisadimg = document.getElementById('pisadimg');
+  const canvas = pisadimg.querySelector('canvas');
+  
+  if (!canvas) {
+      console.error('No chord diagram found to save');
+      return;
+  }
+
+  // Sanitize the chord name for filename
+  const sanitizedName = chordName
+      .replace(/[^a-zA-Z0-9]/g, '_')
+      .replace(/_+/g, '_')
+      .toLowerCase();
+
+  // Create a temporary link to trigger the download
+  const link = document.createElement('a');
+  link.download = `chord_${sanitizedName}.png`;
+  link.href = canvas.toDataURL('image/png');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 // Populate instrument select
 function populateInstrumentSelect() {
   const select = document.getElementById('instrumento');
@@ -1334,6 +1379,27 @@ document.getElementById('numFrets').addEventListener('change', function(e) {
   } else {
     e.target.value = NUM_FRETS; // Reset to current value if invalid
   }
+});
+// Splash screen functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const splashScreen = document.getElementById('splashScreen');
+  const isReturningUser = localStorage.getItem('hasVisitedBefore');
+  
+  // Set timeout duration based on whether user is new or returning
+  const timeoutDuration = isReturningUser ? 300 : 3000;
+  
+  // Hide splash screen after timeout
+  setTimeout(function() {
+    splashScreen.classList.add('splash-hidden');
+    
+    // Remove from DOM after transition completes
+    setTimeout(function() {
+      splashScreen.style.display = 'none';
+    }, 500);
+    
+    // Mark user as returning for next visit
+    localStorage.setItem('hasVisitedBefore', 'true');
+  }, timeoutDuration);
 });
 window.addEventListener('DOMContentLoaded', (event) => {
   // Load saved number of frets if exists
