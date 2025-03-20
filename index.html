@@ -63,10 +63,10 @@
     </div>
     <div class="chord-info">
       <!-- Text Input for Tablature -->
-    <div class="tablature-input-container centrar">
-      TAB: <input type="text" id="tablature-input" placeholder="Tablatura: x 0 2 2 2 0" value="x 0 2 2 2 0">
-      <button onclick="setTablature()" class="favorites-btn" title="Cargar tablatura"><img src="./ok.png" class="favorites-img"></button>
-    </div>
+      <div class="tablature-input-container centrar">
+        TAB: <input type="text" id="tablature-input" placeholder="Tablatura: x 0 2 2 2 0" value="x 0 2 2 2 0">
+        <button onclick="setTablature()" class="favorites-btn" title="Cargar tablatura"><img src="./ok.png" class="favorites-img"></button>
+      </div>
       <div class="centrar">
         <div id="acorde"></div>
         <input type="hidden" id="acorderedux">
@@ -82,14 +82,14 @@
         <div>Únicas: <span id="unicas"></span></div>
         <div>Conteo: <span id="conteo"></span></div>
       </div>
-
+      
       <!-- Piano Keyboard -->
       <div class="piano-container">
         <div class="piano">
           <!-- Piano keys will be generated here by JS -->
         </div>
       </div>
-
+      
       <div class="centrar cols2">
         <!-- Image of the chord -->
         <div id="pisadimg"></div>
@@ -98,89 +98,101 @@
           &larr; DESCARGAR IMG 
         </div>
       </div>
-
+      
     </div>
   </div>
   <!-- Info Icon -->
   <div class="top-right-icons">
     <div class="verticalText">
+      <button onclick="openModalFavorites()" class="favorites-btn" title="Abrir Acordes"><img src="./open.png" class="favorites-img"></button>
       <button id="saveChordBtn" class="favorites-btn" title="Guardar Acorde"><img src="./save.png" class="favorites-img"></button>
       &larr; GUARDAR ACORDE 
     </div>
   </div>
   <div class="top-icons">
-    <button onclick="openModalConfig()" class="favorites-btn" title="Configuraciones"><img src="./config.png" class="favorites-img"></button>
+    <button onclick="openModalConfig()" class="favorites-btn" title="Configuraciones"><img src="./config.png" class="favorites-img modal-config-icon"></button>
     <button onclick="openModal()" class="favorites-btn" title="Notación utilizada"><img src="./info.png" class="favorites-img"></button>
   </div>
-
-<!-- Modal-config -->
-<div id="config-modal" class="modal">
-  <div class="modal-content">
-    <div class="modal-title">Configuración <span class="close" onclick="closeModal()">×</span></div>
-    <hr>
-    <div class="modal-table">
-      <table class="config-table">
-        <tr>
-          <td class="config-label">Número de trastes en la interfaz</td>
-          <td class="config-input">
-            <input type="number" id="numFrets" value="13">
-          </td>
-        </tr>
-        <tr>
-          <td class="config-label">Seleccionar la tónica por</td>
-          <td class="config-input">
-            <select class="small" title="Seleccionar la tónica por..." id="selTonicDef">
-              <option value="0">Más probable</option>
-              <option value="1">Nota más grave</option>
-              <option value="2">Nota más común</option>
-              <option value="3">Cuerda superior</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td class="config-label">Modo oscuro</td>
-          <td class="config-input">
-            <label class="switch">
-              <input type="checkbox" id="darkModeToggle">
-              <span class="slider"></span>
-            </label>
-          </td>
-        </tr>
-        <!-- Add favorites section -->
-        <tr>
-          <td class="config-label">
-            <div class="favorites-header">
-              Acordes Favoritos
-            </div>
-          </td>
-          <td class="config-label">
-            <button id="importFavoritesBtn" class="favorites-btn" title="Importar JSON / Subir"><img src="./import.png" class="favorites-img"></button>
-            <button id="exportFavoritesBtn" class="favorites-btn" title="Exportar JSON / Descargar"><img src="./export.png" class="favorites-img"></button>
-            <button id="clearFavoritesBtn" class="favorites-btn" title="Borrar todos los favoritos"><img src="./trash.png" class="favorites-img"></button>
-          </td>
-        </tr>
-        <tr>
-          <td class="config-label" colspan="2">
-            <div id="favoritesList" class="favorites-list">
-              <!-- Favorites will be populated here -->
-              <div class="no-favorites">No hay acordes guardados</div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td class="config-label">Generar hoja de acordes</td>
-          <td class="config-input">
-            <button id="generateFavSheetBtn" class="favorites-btn" title="Generar planilla de acordes"><img src="./sheet.png" class="favorites-img"></button>
-          </td>
-        </tr>
-      </table>
+  
+  <!-- Modal-config -->
+  <div id="config-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-title">Configuración <span class="close" onclick="closeModal()">×</span></div>
+      <hr>
+      <div class="modal-table">
+        <table class="config-table">
+          <tr>
+            <td class="config-label">Número de trastes en la interfaz</td>
+            <td class="config-input">
+              <input type="number" id="numFrets" value="13">
+            </td>
+          </tr>
+          <tr>
+            <td class="config-label">Seleccionar la tónica por</td>
+            <td class="config-input">
+              <select class="small" title="Seleccionar la tónica por..." id="selTonicDef">
+                <option value="0">Más probable</option>
+                <option value="1">Nota más grave</option>
+                <option value="2">Nota más común</option>
+                <option value="3">Cuerda superior</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="config-label">Modo oscuro</td>
+            <td class="config-input">
+              <label class="switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+              </label>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
-</div>
+  
+  <!-- Favorites-config -->
+  <div id="fav-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-title">Acordes Favoritos <span class="close" onclick="closeModal()">×</span></div>
+      <hr>
+      <div class="modal-table">
+        <table class="config-table">
+          <!-- Add favorites section -->
+          <tr>
+            <td class="config-label" colspan="2">
+              <div id="favoritesList" class="favorites-list">
+                <!-- Favorites will be populated here -->
+                <div class="no-favorites">No hay acordes guardados</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="config-label">
+                Importar / Exportar / Vaciar
+            </td>
+            <td class="config-input">
+              <button id="importFavoritesBtn" class="favorites-btn" title="Importar JSON / Subir"><img src="./import.png" class="favorites-img"></button>
+              <button id="exportFavoritesBtn" class="favorites-btn" title="Exportar JSON / Descargar"><img src="./export.png" class="favorites-img"></button>
+              <button id="clearFavoritesBtn" class="favorites-btn" title="Borrar todos los favoritos"><img src="./trash.png" class="favorites-img"></button>
+            </td>
+          </tr>
+          <tr>
+            <td class="config-label">Generar hoja de acordes</td>
+            <td class="config-input">
+              <button id="generateFavSheetBtn" class="favorites-btn" title="Generar planilla de acordes"><img src="./sheet.png" class="favorites-img"></button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
   <!-- Modal -->
   <div id="notation-modal" class="modal">
     <div class="modal-content">
       <div class="modal-title">Guía sobre la notación utilizada <span class="close" onclick="closeModal()">×</span></div>
+      <hr>
       <iframe src="notacion.html" frameborder="0" style="width: 100%; height: 100%;"></iframe>
     </div>
   </div>

@@ -336,19 +336,29 @@ function openModalConfig() {
   document.getElementById('config-modal').style.display = 'grid';
 }
 
+function openModalFavorites() {
+  document.getElementById('fav-modal').style.display = 'grid';
+}
+
+
 // Function to close the modal
 function closeModal() {
   document.getElementById('notation-modal').style.display = 'none';
   document.getElementById('config-modal').style.display = 'none';
+  document.getElementById('fav-modal').style.display = 'none';
 }
 
 // Close the modal when the user clicks anywhere outside of the modal
 window.onclick = function(event) {
-  const modal = document.getElementById('notation-modal');
-  const modalConfig = document.getElementById('config-modal');
-  if (event.target == modal || event.target == modalConfig) {
-    modal.style.display = 'none';
-    modalConfig.style.display = 'none';
+  const modalIds = ['notation-modal', 'config-modal', 'fav-modal'];
+  // Check if the click target is one of our modals
+  const clickedOnModal = modalIds.some(id => event.target === document.getElementById(id));
+  // If clicked on any modal background, close all modals
+  if (clickedOnModal) {
+    // Close all modals
+    modalIds.forEach(id => {
+      document.getElementById(id).style.display = 'none';
+    });
   }
 }
 

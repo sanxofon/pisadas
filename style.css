@@ -287,8 +287,8 @@ body {
   /* Modal Content */
   .modal-content {
     margin: auto;
-    min-width: 320px;
-    height: 70vh;
+    /* min-width: 320px; */
+    max-height: 70vh;
     width: 100%;
     max-width: 480px;
     background-color: var(--modal-bg);
@@ -304,10 +304,14 @@ body {
   .modal-table {
     margin: auto;
     min-width: 320px;
-    height: 70vh;
+    max-height: 70vh;
     width: 100%;
     max-width: 480px;
     background-color: var(--input-bg);
+  }
+
+  #notation-modal iframe {
+    height: 70vh!important;
   }
   
   .blanco {
@@ -653,7 +657,7 @@ body {
 }
 
 .favorites-list {
-  max-height: 200px;
+  max-height: 280px;
   overflow-y: auto;
   border: 1px solid var(--fretboard-border);
   border-radius: 4px;
@@ -720,7 +724,10 @@ body {
 }
 
 .flash-icon {
-  animation: flash 0.5s ease-in-out 6 alternate;
+  border-radius: 50%;
+  background-color: rgb(9, 255, 0);
+  /* animation: flash 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) 6 alternate; */
+  animation: flash 1.5s cubic-bezier(0.68, -0.9, 0.32, 5.9) 1 alternate;
 }
 
 .export-modal {
